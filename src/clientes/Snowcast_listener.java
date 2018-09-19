@@ -10,5 +10,9 @@ package clientes;
  * @author Programador-03
  */
 public class Snowcast_listener {
+    public static void main(String[] args) {
+        int portaUDP = 66666;
+        System.out.println("Cliente UDP , porta" +  portaUDP);
+    }
     
 }
