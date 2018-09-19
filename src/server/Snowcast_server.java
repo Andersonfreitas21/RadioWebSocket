@@ -71,12 +71,12 @@ public class Snowcast_server {
             //Retorna um fluxo de entrada para este soquete. Envia para o servidor
             ObjectOutputStream welcome = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
-            
+
             //Recebendo o comando Hello do cliente 
             //Lê um objeto InputSream, porta UDP Cliente
             int portUDPClient = input.readInt();
             System.out.println("Porta UDP Client : " + portUDPClient);
-            
+
             //Envia para o cliente uma mensagem de fluxo
             //Respostas do servidor para o cliente
             //Welcome (Enviado em resposta ao comando Hello)
@@ -113,14 +113,16 @@ public class Snowcast_server {
             //Cria uma conexão
             server.criaServerSocket(55555);
 
-            //Espera a solicitação de uma conexão do cliente
-            Socket socket = server.esperaConexão();
+            while (true) {
+                //Espera a solicitação de uma conexão do cliente
+                Socket socket = server.esperaConexão();
 
-            //Tratando conexão
-            server.trataConexao(socket);
+                //Tratando conexão
+                server.trataConexao(socket);
 
-            //Fechando conexão
-            server.fechaConexao(socket);
+                //Fechando conexão
+                server.fechaConexao(socket);
+            }
 
         } catch (Exception ex) {
             System.out.println("Erro: " + ex.getMessage());
