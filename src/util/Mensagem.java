@@ -6,6 +6,7 @@
 package util;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  *
@@ -30,6 +31,16 @@ public class Mensagem implements Serializable{
     private int stationNumber;
     private int replayType;
     private int numStation;
+    
+    Map<String, Object> parametros;
+
+    public Map<String, Object> getParametros() {
+        return parametros;
+    }
+
+    public void setParametros(Map<String, Object> parametros) {
+        this.parametros = parametros;
+    }
 
     public int getReplayType() {
         return replayType;

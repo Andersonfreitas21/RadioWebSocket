@@ -91,6 +91,8 @@ public class Snowcast_server {
                 //Enviando estações ao cliente
                 output.writeObject(protocoloWelcome);
                 //Envia dados de controle (Estações)
+                
+                
                 output.writeUTF("Estações : <estação1>||<arquivo1>, <estação2>||<arquivo2>, <estação3>||<arquivo3>");
                 output.flush();
 
