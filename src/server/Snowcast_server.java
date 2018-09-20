@@ -90,6 +90,8 @@ public class Snowcast_server {
 
                 //Enviando estações ao cliente
                 output.writeObject(protocoloWelcome);
+                //Envia dados de controle (Estações)
+                output.writeUTF("Estações : <estação1>||<arquivo1>, <estação2>||<arquivo2>, <estação3>||<arquivo3>");
                 output.flush();
 
             } else {
@@ -100,23 +102,18 @@ public class Snowcast_server {
             //Respostas do servidor para o cliente
             //Welcome (Enviado em resposta ao comando Hello)
             //numStations
-            //Envia dados de controle (Estações)
-            output.writeUTF("Estações <arquivo1> <estação1>...");
-            output.flush();
-
 //          Recebendo o número da estação escolhida pelo cliente;
 //          int stationNumber = input.readInt();
 //          System.out.println("Número da estação escolhida : " + stationNumber);
-
             //Fechar os streams de entrada e saída
             input.close();
             output.close();
 
         } catch (Exception ex) {
-            
+
             //Tratando as falhas
             System.out.println("Erro : " + ex.getMessage());
-            
+
         } finally {
 
             //Fechando conexão
@@ -143,10 +140,10 @@ public class Snowcast_server {
 
                 //Fechando conexão
                 server.fechaConexao(socket);
-                
+
                 System.out.println("Aguardando clientes...");
             }
-            
+
         } catch (Exception ex) {
             //Tratando erros na comunicação Socket
             System.out.println("Erro Socket: " + ex.getMessage());

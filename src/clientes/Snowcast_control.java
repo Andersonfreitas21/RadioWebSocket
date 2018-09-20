@@ -51,6 +51,8 @@ public class Snowcast_control {
             if (protocoloWelcome.getReplayType()== 0) {
                 //Protocolo de comunicação OK
                 System.out.println("Número de estações :" + protocoloWelcome.getNumStation());
+                String estacoes = input.readUTF();
+                System.out.println(estacoes);
             } else {
                 //Comande Erro
                 System.out.println("Erro!");
