@@ -25,6 +25,7 @@ public class Mensagem implements Serializable{
      * Respostas do servidor para o cliente
      * 1. Welcome:uint8_t replyType = 0; uint16_t numStations;
      * 2. Announce:uint8_t replyType = 1; uint8_t songnameSize; char songname[songnameSize];
+     * 3. InvalidCommand:uint8_t replyType = 2; uint8_t replyStringSize; char replyString[replyStringSize];
      */
     private int commandType;
     private int updPort;

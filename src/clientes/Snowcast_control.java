@@ -68,17 +68,6 @@ public class Snowcast_control {
                 System.out.println("Erro!");
             }
             
-
-//            //Recebendo uma mensagem do servidor
-//            String estacoes = input.readUTF();
-//            System.out.println("Mensagem recebida servidor : " + estacoes);
-//
-//            //Estação escolhida
-//            int setStation = 1;
-//            //Enviando ao servidor um código com a estação escolhida pelo cliente
-//            output.writeInt(setStation);
-//            output.flush();
-
             //Fechar os streams de entrada e saída
             input.close();
             output.close();
