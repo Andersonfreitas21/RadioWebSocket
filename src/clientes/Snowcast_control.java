@@ -53,6 +53,16 @@ public class Snowcast_control {
                 System.out.println("Número de estações :" + protocoloWelcome.getNumStation());
                 String estacoes = input.readUTF();
                 System.out.println(estacoes);
+                
+                
+                //Cliente escolhe a estação para tocar a canção
+                Mensagem protocoloSetStation = new Mensagem();
+                protocoloSetStation.setNumStation(0);
+                
+                //Enviando para o servidor o número da estação selecionada
+                output.writeObject(protocoloSetStation);
+                output.flush();
+                
             } else {
                 //Comande Erro
                 System.out.println("Erro!");

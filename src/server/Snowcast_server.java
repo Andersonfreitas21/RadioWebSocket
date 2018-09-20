@@ -95,6 +95,15 @@ public class Snowcast_server {
                 
                 output.writeUTF("Estações : <estação1>||<arquivo1>, <estação2>||<arquivo2>, <estação3>||<arquivo3>");
                 output.flush();
+                
+                //Recebendo o número da estação selecionada pelo cliente
+                int numStation = (Integer) input.readObject();
+                System.out.println("Estação selecionada pelo cliente : " + numStation);
+                
+                
+                //Enviando arquivo da canção para cliente UDP
+                
+                
 
             } else {
                 System.out.println("Erro no comando HELLO");
