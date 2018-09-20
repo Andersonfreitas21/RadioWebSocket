@@ -83,14 +83,17 @@ public class Snowcast_server {
             protocoloWelcome.setReplayType(0);
             protocoloWelcome.setNumStation(10);
             
+            //Verificando o comando HELLO
             if (protocoloHello.getCommandType() == 0) {
                 //Comando do cliente recebido com sucesso: Comando HELLO - CLIENTE ---> socket ----> SERVIDOR
                 System.out.println("Porta UDP Client : " + protocoloHello.getUpdPort());
                 
-                //Enviando 
+                //Enviando estações ao cliente
+                output.writeObject(protocoloWelcome);
+                output.flush();
                 
             } else {
-                System.out.println("Erro no protocolo HELLO");
+                System.out.println("Erro no comando HELLO");
             }
 
             //Envia para o cliente uma mensagem de fluxo

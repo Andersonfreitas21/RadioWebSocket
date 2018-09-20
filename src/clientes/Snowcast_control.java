@@ -19,7 +19,7 @@ import util.Mensagem;
  */
 public class Snowcast_control {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ClassNotFoundException {
 
         try {
             //Cria um socket para estabelecer conexãqo com o servidor
@@ -36,25 +36,37 @@ public class Snowcast_control {
              *
              */
             //Instanciando o protocolo HELLO
-            Mensagem protocolo = new Mensagem();
-            protocolo.setCommandType(0);
-            protocolo.setUpdPort(66666);
+            Mensagem protocoloHello = new Mensagem();
+            protocoloHello.setCommandType(0);
+            protocoloHello.setUpdPort(66666);
             
             //Enviando porta UDP para o servidor
-            output.writeObject(protocolo);
+            output.writeObject(protocoloHello);
             //Isso irá gravar quaisquer bytes de saída em buffer e flush através do fluxo subjacente.
             output.flush();
+            
+            //Recebendo a resposta do servidor
+            Mensagem protocoloWelcome = (Mensagem) input.readObject();
+            
+            if (protocoloWelcome.getCommandType() == 0) {
+                //Protocolo de comunicação OK
+                System.out.println("Número de estações :" + protocoloWelcome.getStationNumber());
+            } else {
+                //Comande Erro
+                System.out.println("Erro!");
+            }
+            
 
-            //Recebendo uma mensagem do servidor
-            String estacoes = input.readUTF();
-            System.out.println("Mensagem recebida servidor : " + estacoes);
+//            //Recebendo uma mensagem do servidor
+//            String estacoes = input.readUTF();
+//            System.out.println("Mensagem recebida servidor : " + estacoes);
+//
+//            //Estação escolhida
+//            int setStation = 1;
+//            //Enviando ao servidor um código com a estação escolhida pelo cliente
+//            output.writeInt(setStation);
+//            output.flush();
 
-//                //Estação escolhida
-//                int setStation = 1;
-//                //Enviando ao servidor um código com a estação escolhida pelo cliente
-//                output.writeInt(setStation);
-//                output.flush();
-//                
             //Fechar os streams de entrada e saída
             input.close();
             output.close();
