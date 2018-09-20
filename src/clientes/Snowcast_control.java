@@ -57,10 +57,10 @@ public class Snowcast_control {
                 
                 //Cliente escolhe a estação para tocar a canção
                 Mensagem protocoloSetStation = new Mensagem();
-                protocoloSetStation.setNumStation(0);
+                protocoloSetStation.setNumStation(5);
                 
                 //Enviando para o servidor o número da estação selecionada
-                output.writeObject(protocoloSetStation);
+                output.writeObject(protocoloSetStation.getNumStation());
                 output.flush();
                 
             } else {
