@@ -11,6 +11,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import util.Mensagem;
 
 /**
  *
@@ -19,34 +20,44 @@ import java.util.logging.Logger;
 public class Snowcast_control {
 
     public static void main(String[] args) {
+
         try {
             //Cria um socket para estabelecer conexãqo com o servidor
             Socket socketClienteTCP = new Socket("127.0.0.1", 55555);
-
+            
             //Criação dos streams de entrada e saída
-            ObjectOutputStream hello = new ObjectOutputStream(socketClienteTCP.getOutputStream());
+            ObjectOutputStream output = new ObjectOutputStream(socketClienteTCP.getOutputStream());
             ObjectInputStream input = new ObjectInputStream(socketClienteTCP.getInputStream());
 
-            //Porta cliente UDP
-            int portaUDP = 6666;
+            /**
+             * Protocolo de comandos 
+             * HELLO       --- > PortaUDP
+             * HELLOREPLAY --- > Estações <arquivos>
+             *
+             */
+            //Instanciando o protocolo HELLO
+            Mensagem protocolo = new Mensagem();
+            protocolo.setCommandType(0);
+            protocolo.setUpdPort(66666);
+            
             //Enviando porta UDP para o servidor
-            hello.writeInt(portaUDP);
+            output.writeObject(protocolo);
             //Isso irá gravar quaisquer bytes de saída em buffer e flush através do fluxo subjacente.
-            hello.flush();
+            output.flush();
 
             //Recebendo uma mensagem do servidor
             String estacoes = input.readUTF();
-            System.out.println("Estações do Servidor : " + estacoes);
+            System.out.println("Mensagem recebida servidor : " + estacoes);
 
-            //Estação escolhida
-            int setStation = 1;
-            //Enviando ao servidor um código com a estação escolhida pelo cliente
-            hello.writeInt(setStation);
-            hello.flush();
-
+//                //Estação escolhida
+//                int setStation = 1;
+//                //Enviando ao servidor um código com a estação escolhida pelo cliente
+//                output.writeInt(setStation);
+//                output.flush();
+//                
             //Fechar os streams de entrada e saída
-            hello.close();
             input.close();
+            output.close();
 
         } catch (IOException ex) {
             Logger.getLogger(Snowcast_control.class.getName()).log(Level.SEVERE, null, ex);

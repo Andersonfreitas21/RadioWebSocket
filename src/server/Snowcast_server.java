@@ -40,6 +40,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import util.Mensagem;
 
 /**
  *
@@ -69,30 +70,41 @@ public class Snowcast_server {
     private void trataConexao(Socket socket) throws IOException {
         try {
             //Retorna um fluxo de entrada para este soquete. Envia para o servidor
-            ObjectOutputStream welcome = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
-
+            ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+            
+            //Cria um Objeto tido Mensagem para se comunicar com o servidor
             //Recebendo o comando Hello do cliente 
-            //Lê um objeto InputSream, porta UDP Cliente
-            int portUDPClient = input.readInt();
-            System.out.println("Porta UDP Client : " + portUDPClient);
+            //Lê um objeto ObjectInputStream, porta UDP Cliente
+            Mensagem protocoloHello = (Mensagem) input.readObject();
+            
+            //Cria um Objeto tido Mensagem para se comunicar com o servidor
+            Mensagem protocoloWelcome = new Mensagem();
+            protocoloWelcome.setReplayType(0);
+            protocoloWelcome.setNumStation(10);
+            
+            if (protocoloHello.getCommandType() == 0) {
+                //Comando do cliente recebido com sucesso: Comando HELLO - CLIENTE ---> socket ----> SERVIDOR
+                System.out.println("Porta UDP Client : " + protocoloHello.getUpdPort());
+                
+                //Enviando 
+                
+            } else {
+                System.out.println("Erro no protocolo HELLO");
+            }
 
             //Envia para o cliente uma mensagem de fluxo
             //Respostas do servidor para o cliente
             //Welcome (Enviado em resposta ao comando Hello)
             //numStations
             //Envia dados de controle (Estações)
-            welcome.writeUTF("Estações <arquivo1> <estação1>...");
-            welcome.flush();
+            output.writeUTF("Estações <arquivo1> <estação1>...");
+            output.flush();
 
-            //Recebendo o número da estação escolhida pelo cliente;
-            int stationNumber = input.readInt();
-            System.out.println("Número da estação escolhida : " + stationNumber);
-
-            //Fechar os streams de entrada e saída
-            welcome.close();
-            input.close();
-
+//                //Recebendo o número da estação escolhida pelo cliente;
+//                int stationNumber = input.readInt();
+//                System.out.println("Número da estação escolhida : " + stationNumber);
+//                //Fechar os streams de entrada e saída
         } catch (Exception ex) {
             //Tratando as falhas
             System.out.println("Erro : " + ex.getMessage());
