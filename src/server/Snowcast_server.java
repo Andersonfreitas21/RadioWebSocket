@@ -72,26 +72,26 @@ public class Snowcast_server {
             //Retorna um fluxo de entrada para este soquete. Envia para o servidor
             ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
             ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
-            
+
             //Cria um Objeto tido Mensagem para se comunicar com o servidor
             //Recebendo o comando Hello do cliente 
             //Lê um objeto ObjectInputStream, porta UDP Cliente
             Mensagem protocoloHello = (Mensagem) input.readObject();
-            
+
             //Cria um Objeto tido Mensagem para se comunicar com o servidor
             Mensagem protocoloWelcome = new Mensagem();
             protocoloWelcome.setReplayType(0);
             protocoloWelcome.setNumStation(10);
-            
+
             //Verificando o comando HELLO
             if (protocoloHello.getCommandType() == 0) {
                 //Comando do cliente recebido com sucesso: Comando HELLO - CLIENTE ---> socket ----> SERVIDOR
                 System.out.println("Porta UDP Client : " + protocoloHello.getUpdPort());
-                
+
                 //Enviando estações ao cliente
                 output.writeObject(protocoloWelcome);
                 output.flush();
-                
+
             } else {
                 System.out.println("Erro no comando HELLO");
             }
@@ -104,13 +104,19 @@ public class Snowcast_server {
             output.writeUTF("Estações <arquivo1> <estação1>...");
             output.flush();
 
-//                //Recebendo o número da estação escolhida pelo cliente;
-//                int stationNumber = input.readInt();
-//                System.out.println("Número da estação escolhida : " + stationNumber);
-//                //Fechar os streams de entrada e saída
+//          Recebendo o número da estação escolhida pelo cliente;
+//          int stationNumber = input.readInt();
+//          System.out.println("Número da estação escolhida : " + stationNumber);
+
+            //Fechar os streams de entrada e saída
+            input.close();
+            output.close();
+
         } catch (Exception ex) {
+            
             //Tratando as falhas
             System.out.println("Erro : " + ex.getMessage());
+            
         } finally {
 
             //Fechando conexão
@@ -137,10 +143,13 @@ public class Snowcast_server {
 
                 //Fechando conexão
                 server.fechaConexao(socket);
+                
+                System.out.println("Aguardando clientes...");
             }
-
+            
         } catch (Exception ex) {
-            System.out.println("Erro: " + ex.getMessage());
+            //Tratando erros na comunicação Socket
+            System.out.println("Erro Socket: " + ex.getMessage());
         }
 
     }

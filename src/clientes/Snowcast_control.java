@@ -48,9 +48,9 @@ public class Snowcast_control {
             //Recebendo a resposta do servidor
             Mensagem protocoloWelcome = (Mensagem) input.readObject();
             
-            if (protocoloWelcome.getCommandType() == 0) {
+            if (protocoloWelcome.getReplayType()== 0) {
                 //Protocolo de comunicação OK
-                System.out.println("Número de estações :" + protocoloWelcome.getStationNumber());
+                System.out.println("Número de estações :" + protocoloWelcome.getNumStation());
             } else {
                 //Comande Erro
                 System.out.println("Erro!");
