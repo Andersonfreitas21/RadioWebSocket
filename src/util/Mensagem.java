@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package util;
 
 import java.io.Serializable;
@@ -19,18 +15,19 @@ public class Mensagem implements Serializable{
 
     /**
      * Comandos do cliente para o servidor
-     * 1. Hello: uint8_t commandType = 0;      uint16_t udpPort;
-     * 2. SetStation: uint8_t commandType = 1; uint16_t stationNumber;
+     * 1. Hello:      uint8_t commandType = 0;  uint16_t udpPort;
+     * 2. SetStation: uint8_t commandType = 1;  uint16_t stationNumber;
      * 
      * Respostas do servidor para o cliente
-     * 1. Welcome:uint8_t replyType = 0; uint16_t numStations;
-     * 2. Announce:uint8_t replyType = 1; uint8_t songnameSize; char songname[songnameSize];
+     * 1. Welcome: uint8_t replyType = 0;       uint16_t numStations;
+     * 2. Announce:uint8_t replyType = 1;       uint8_t songnameSize; char songname[songnameSize];
      * 3. InvalidCommand:uint8_t replyType = 2; uint8_t replyStringSize; char replyString[replyStringSize];
      */
-    private int commandType;
+    
+    private char commandType;
     private int updPort;
     private int stationNumber;
-    private int replayType;
+    private char replayType;
     private int numStation;
     
     Map<String, Object> parametros;
@@ -47,7 +44,7 @@ public class Mensagem implements Serializable{
         return replayType;
     }
 
-    public void setReplayType(int replayType) {
+    public void setReplayType(char replayType) {
         this.replayType = replayType;
     }
 
@@ -77,7 +74,7 @@ public class Mensagem implements Serializable{
         return commandType;
     }
 
-    public void setCommandType(int commandType) {
+    public void setCommandType(char commandType) {
         this.commandType = commandType;
     }
 

@@ -1,19 +1,3 @@
-//////////////////////////////////Servidor de sockets e esperar conexões dos clientes/////////////////////////////////////
-//	Como estaremos trabalhando em rede, os comandos gerarão exceções 
-//	Cria uma conexão segura TCP via socket
-//	Estartar o servidor de sockets informando a porta de fluxo
-//	ServerSocket server = new ServerSocket(7689)
-//	
-//	Recebendo conexões de clientes
-//	while(true){
-//		Aceita uma conexão cliente
-//		Socket cliente = server.accept();
-//		
-//		Criando uma thread cliente (Class) passando um socket por parâmetro
-//		ClientThread ct = new ClientThread(cliente);
-//		cliente.start();
-//		
-//	}
 //////////////////Parâmetros do Trabalho WEB RÁDIO COM SOCKETS///////////////////////////////////////////////////////////
 //	Cria uma conexão segura TCP via socket
 //	Recebe do cliente qual estação deseja estudar a canção
@@ -49,6 +33,7 @@ import util.Mensagem;
 public class Snowcast_server {
 
     private ServerSocket serverSocket;
+    static final int portServer = 55555;
 
     //Cria uma conexão ServerSocket
     private void criaServerSocket(int portaServer) throws IOException {
@@ -80,11 +65,11 @@ public class Snowcast_server {
 
             //Cria um Objeto tido Mensagem para se comunicar com o servidor
             Mensagem protocoloWelcome = new Mensagem();
-            protocoloWelcome.setReplayType(0);
+            protocoloWelcome.setReplayType('0');
             protocoloWelcome.setNumStation(10);
 
             //Verificando o comando HELLO
-            if (protocoloHello.getCommandType() == 0) {
+            if (protocoloHello.getCommandType() == '0') {
                 //Comando do cliente recebido com sucesso: Comando HELLO - CLIENTE ---> socket ----> SERVIDOR
                 System.out.println("Porta UDP Client : " + protocoloHello.getUpdPort());
 
@@ -140,7 +125,7 @@ public class Snowcast_server {
             System.out.println("Aguardando conexão...");
 
             //Cria uma conexão
-            server.criaServerSocket(55555);
+            server.criaServerSocket(portServer);
 
             while (true) {
                 //Espera a solicitação de uma conexão do cliente
@@ -157,7 +142,7 @@ public class Snowcast_server {
 
         } catch (Exception ex) {
             //Tratando erros na comunicação Socket
-            System.out.println("Erro Socket: " + ex.getMessage());
+            System.out.println("Erro de comunicação do Socket: " + ex.getMessage());
         }
 
     }
