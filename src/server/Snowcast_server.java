@@ -77,7 +77,6 @@ public class Snowcast_server {
                 output.writeObject(protocoloWelcome);
                 //Envia dados de controle (Estações)
                 
-                
                 output.writeUTF("Estações : <estação1>||<arquivo1>, <estação2>||<arquivo2>, <estação3>||<arquivo3>");
                 output.flush();
                 
@@ -94,14 +93,6 @@ public class Snowcast_server {
                 System.out.println("Erro no comando HELLO");
             }
 
-            //Envia para o cliente uma mensagem de fluxo
-            //Respostas do servidor para o cliente
-            //Welcome (Enviado em resposta ao comando Hello)
-            //numStations
-//          Recebendo o número da estação escolhida pelo cliente;
-//          int stationNumber = input.readInt();
-//          System.out.println("Número da estação escolhida : " + stationNumber);
-            //Fechar os streams de entrada e saída
             input.close();
             output.close();
 

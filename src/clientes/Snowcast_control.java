@@ -4,9 +4,12 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+//import javax.swing.JOptionPane;
 import util.Mensagem;
+import view.Snowcast_control_fr;
 
 /**
  *
@@ -14,9 +17,14 @@ import util.Mensagem;
  */
 public class Snowcast_control {
 
-    public static void main(String[] args) throws ClassNotFoundException {
+    //Snowcast_control_fr view = new Snowcast_control_fr();
+    Snowcast_control_fr view;
+
+    public void conexaoTCP(Snowcast_control_fr view) throws ClassNotFoundException {
         try {
 
+            this.view  = view;
+            
             String server = "127.0.0.1";
             int portServer = 55555;
 
@@ -28,16 +36,16 @@ public class Snowcast_control {
             ObjectInputStream input = new ObjectInputStream(socketClienteTCP.getInputStream());
 
             /**
-             * Comandos do cliente para o servidor 
-             * 1. Hello: uint8_t commandType = 0; uint16_t udpPort; 
-             * 2. SetStation: uint8_t commandType = 1; uint16_t stationNumber;
+             * Comandos do cliente para o servidor 1. Hello: uint8_t commandType
+             * = 0; uint16_t udpPort; 2. SetStation: uint8_t commandType = 1;
+             * uint16_t stationNumber;
              *
-             * Respostas do servidor para o cliente 
-             * 1. Welcome:uint8_t replyType = 0; uint16_t numStations; 
-             * 2. Announce:uint8_t replyType = 1; uint8_t songnameSize; char songname[songnameSize]; 
-             * 3.InvalidCommand:uint8_t replyType = 2; uint8_t replyStringSize; char replyString[replyStringSize];
+             * Respostas do servidor para o cliente 1. Welcome:uint8_t replyType
+             * = 0; uint16_t numStations; 2. Announce:uint8_t replyType = 1;
+             * uint8_t songnameSize; char songname[songnameSize];
+             * 3.InvalidCommand:uint8_t replyType = 2; uint8_t replyStringSize;
+             * char replyString[replyStringSize];
              */
-            
             //Instanciando o protocolo HELLO
             Mensagem protocoloHello = new Mensagem();
             protocoloHello.setCommandType('0');
@@ -54,28 +62,28 @@ public class Snowcast_control {
             switch (protocoloWelcome.getReplayType()) {
                 case '0':
                     //Protocolo de comunicação OK
-                    System.out.println("Número de estações : " + protocoloWelcome.getNumStation());
+                    //System.out.println("Número de estações : " + protocoloWelcome.getNumStation());
                     String estacoes = input.readUTF();
-                    System.out.println(estacoes);
-                    
+                    view.RetornoDados(estacoes);
+
                     //Cliente escolhe a estação para tocar a canção
                     Mensagem protocoloSetStation = new Mensagem();
-                    protocoloSetStation.setNumStation(5);
-                    
+
+                    //protocoloSetStation.setNumStation(est);
                     //Enviando para o servidor o número da estação selecionada
                     output.writeObject(protocoloSetStation.getNumStation());
                     output.flush();
-                    
+
                     break;
                 case '1':
                     //2. Announce:uint8_t replyType = 1; uint8_t songnameSize; char songname[songnameSize];
                     System.out.println("uint8_t songnameSize; char songname[songnameSize]");
-                    
+
                     break;
                 case '2':
                     //3.InvalidCommand:uint8_t replyType = 2; uint8_t replyStringSize; char replyString[replyStringSize];
                     System.out.println("3.InvalidCommand:uint8_t replyType = 2; uint8_t replyStringSize; char replyString[replyStringSize];");
-                    
+
                     break;
                 default:
                     System.out.println("Erro default");
@@ -89,7 +97,5 @@ public class Snowcast_control {
         } catch (IOException ex) {
             Logger.getLogger(Snowcast_control.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
-
 }
