@@ -101,12 +101,19 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Estação", "Música"
+                "Estação", "Música"
             }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
@@ -119,11 +126,9 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
         jTable1.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
             jTable1.getColumnModel().getColumn(0).setResizable(false);
-            jTable1.getColumnModel().getColumn(0).setPreferredWidth(10);
+            jTable1.getColumnModel().getColumn(0).setPreferredWidth(50);
             jTable1.getColumnModel().getColumn(1).setResizable(false);
-            jTable1.getColumnModel().getColumn(1).setPreferredWidth(45);
-            jTable1.getColumnModel().getColumn(2).setResizable(false);
-            jTable1.getColumnModel().getColumn(2).setPreferredWidth(45);
+            jTable1.getColumnModel().getColumn(1).setPreferredWidth(50);
         }
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -159,9 +164,9 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addComponent(btn_listar, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
+                .addGap(48, 48, 48)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(txtEstacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)

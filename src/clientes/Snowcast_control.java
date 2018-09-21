@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 //import javax.swing.JOptionPane;
 import util.Mensagem;
 import view.Snowcast_control_fr;
@@ -26,6 +27,7 @@ public class Snowcast_control {
 
             String server = "127.0.0.1";
             int portServer = 55555;
+            int portUDPCliente = 66666;
 
             //Cria um socket para estabelecer conexãqo com o servidor
             Socket socketClienteTCP = new Socket(server, portServer);
@@ -45,7 +47,7 @@ public class Snowcast_control {
             //Instanciando o protocolo HELLO
             Mensagem protocoloHello = new Mensagem();
             protocoloHello.setCommandType('0');
-            protocoloHello.setUpdPort(66666);
+            protocoloHello.setUpdPort(portUDPCliente);
 
             //Enviando porta UDP para o servidor
             output.writeObject(protocoloHello);
@@ -78,8 +80,7 @@ public class Snowcast_control {
                     break;
                 case '2':
                     //3.InvalidCommand:uint8_t replyType = 2; uint8_t replyStringSize; char replyString[replyStringSize];
-                    System.out.println("3.InvalidCommand:uint8_t replyType = 2; uint8_t replyStringSize; char replyString[replyStringSize];");
-
+                    JOptionPane.showMessageDialog(null, "InvalidCommand");
                     break;
                 default:
                     System.out.println("Erro default");

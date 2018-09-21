@@ -30,16 +30,17 @@ public class Mensagem implements Serializable{
     private char replayType;
     private int numStation;
     
-    Map<String, Object> parametros;
+    Map<String, String> estacoes;
 
-    public Map<String, Object> getParametros() {
-        return parametros;
+    public Map<String, String> getEstacoes() {
+        return estacoes;
     }
 
-    public void setParametros(Map<String, Object> parametros) {
-        this.parametros = parametros;
+    public void setEstacoes(Map<String, String> estacoes) {
+        this.estacoes = estacoes;
     }
 
+   
     public int getReplayType() {
         return replayType;
     }

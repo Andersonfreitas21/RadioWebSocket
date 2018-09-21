@@ -25,6 +25,7 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import util.Mensagem;
+import view.Snowcast_server_fr;
 
 /**
  *
@@ -34,7 +35,10 @@ public class Snowcast_server {
 
     private ServerSocket serverSocket;
     static final int portServer = 55555;
+    Snowcast_server server;
+    Snowcast_server_fr view;
 
+   
     //Cria uma conexão ServerSocket
     private void criaServerSocket(int portaServer) throws IOException {
         serverSocket = new ServerSocket(portaServer);
@@ -54,6 +58,14 @@ public class Snowcast_server {
     //Cria uma conexão de entrada e saída entre cliente e servidor de acordo com o protocolo
     private void trataConexao(Socket socket) throws IOException {
         try {
+            //###### Comandos do cliente para o servidor ######
+            // 1. Hello:      uint8_t commandType= 0;  uint16_t udpPort;
+            // 2. SetStation: uint8_t commandType = 1; uint16_t stationNumber;
+            //###### Respostas do servidor para o cliente ######
+            // 1. Welcome:        uint8_t replyType = 0; uint16_t numStations;
+            // 2. Announce:       uint8_t replyType = 1; uint8_t songnameSize;    char songname[songnameSize];
+            // 3. InvalidCommand: uint8_t replyType = 2; uint8_t replyStringSize; char replyString[replyStringSize];
+            
             //Retorna um fluxo de entrada para este soquete. Envia para o servidor
             ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
             ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
@@ -112,7 +124,8 @@ public class Snowcast_server {
     public static void main(String[] agrs) throws IOException {
         try {
             //Instacia um objeto tipo Snowcast_server
-            Snowcast_server server = new Snowcast_server();
+            Snowcast_server server;
+            server = new Snowcast_server();
             System.out.println("Aguardando conexão...");
 
             //Cria uma conexão
