@@ -17,14 +17,13 @@ import view.Snowcast_control_fr;
  */
 public class Snowcast_control {
 
-    //Snowcast_control_fr view = new Snowcast_control_fr();
     Snowcast_control_fr view;
 
     public void conexaoTCP(Snowcast_control_fr view) throws ClassNotFoundException {
         try {
 
-            this.view  = view;
-            
+            this.view = view;
+
             String server = "127.0.0.1";
             int portServer = 55555;
 
@@ -35,17 +34,14 @@ public class Snowcast_control {
             ObjectOutputStream output = new ObjectOutputStream(socketClienteTCP.getOutputStream());
             ObjectInputStream input = new ObjectInputStream(socketClienteTCP.getInputStream());
 
-            /**
-             * Comandos do cliente para o servidor 1. Hello: uint8_t commandType
-             * = 0; uint16_t udpPort; 2. SetStation: uint8_t commandType = 1;
-             * uint16_t stationNumber;
-             *
-             * Respostas do servidor para o cliente 1. Welcome:uint8_t replyType
-             * = 0; uint16_t numStations; 2. Announce:uint8_t replyType = 1;
-             * uint8_t songnameSize; char songname[songnameSize];
-             * 3.InvalidCommand:uint8_t replyType = 2; uint8_t replyStringSize;
-             * char replyString[replyStringSize];
-             */
+            //###### Comandos do cliente para o servidor ######
+            // 1. Hello:      uint8_t commandType= 0;  uint16_t udpPort;
+            // 2. SetStation: uint8_t commandType = 1; uint16_t stationNumber;
+            //###### Respostas do servidor para o cliente ######
+            // 1. Welcome:        uint8_t replyType = 0; uint16_t numStations;
+            // 2. Announce:       uint8_t replyType = 1; uint8_t songnameSize;    char songname[songnameSize];
+            // 3. InvalidCommand: uint8_t replyType = 2; uint8_t replyStringSize; char replyString[replyStringSize];
+            
             //Instanciando o protocolo HELLO
             Mensagem protocoloHello = new Mensagem();
             protocoloHello.setCommandType('0');
