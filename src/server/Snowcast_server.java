@@ -38,7 +38,6 @@ public class Snowcast_server {
     Snowcast_server server;
     Snowcast_server_fr view;
 
-   
     //Cria uma conexão ServerSocket
     private void criaServerSocket(int portaServer) throws IOException {
         serverSocket = new ServerSocket(portaServer);
@@ -52,6 +51,7 @@ public class Snowcast_server {
 
     //Fechando o socket
     private void fechaConexao(Socket socket) throws IOException {
+        System.out.println("Fechando conexão ...");
         socket.close();
     }
 
@@ -99,8 +99,6 @@ public class Snowcast_server {
                 
                 //Enviando arquivo da canção para cliente UDP
                 
-                
-
             } else {
                 System.out.println("Erro no comando HELLO");
             }
@@ -109,20 +107,16 @@ public class Snowcast_server {
             output.close();
 
         } catch (Exception ex) {
-
             //Tratando as falhas
             System.out.println("Erro : " + ex.getMessage());
-
         } finally {
-
             //Fechando conexão
             fechaConexao(socket);
-
         }
     }
-
-    public static void main(String[] agrs) throws IOException {
-        try {
+    
+    public void instanciaServer() {
+         try {
             //Instacia um objeto tipo Snowcast_server
             Snowcast_server server;
             server = new Snowcast_server();
@@ -148,7 +142,40 @@ public class Snowcast_server {
             //Tratando erros na comunicação Socket
             System.out.println("Erro de comunicação do Socket: " + ex.getMessage());
         }
-
     }
+    
+    public void stop() throws IOException{Socket socket = null;server.fechaConexao(socket);}
+    
+    
+
+//    public static void main(String[] agrs) throws IOException {
+//        try {
+//            //Instacia um objeto tipo Snowcast_server
+//            Snowcast_server server;
+//            server = new Snowcast_server();
+//            System.out.println("Aguardando conexão...");
+//
+//            //Cria uma conexão
+//            server.criaServerSocket(portServer);
+//
+//            while (true) {
+//                //Espera a solicitação de uma conexão do cliente
+//                Socket socket = server.esperaConexão();
+//
+//                //Tratando conexão
+//                server.trataConexao(socket);
+//
+//                //Fechando conexão
+//                server.fechaConexao(socket);
+//
+//                System.out.println("Aguardando clientes...");
+//            }
+//
+//        } catch (Exception ex) {
+//            //Tratando erros na comunicação Socket
+//            System.out.println("Erro de comunicação do Socket: " + ex.getMessage());
+//        }
+//
+//    }
 
 }
