@@ -13,17 +13,14 @@ public class Mensagem implements Serializable {
     public Mensagem() {
     }
 
-    /**
-     * Comandos do cliente para o servidor 1. Hello: uint8_t commandType = 0;
-     * uint16_t udpPort; 2. SetStation: uint8_t commandType = 1; uint16_t
-     * stationNumber;
-     *
-     * Respostas do servidor para o cliente 1. Welcome: uint8_t replyType = 0;
-     * uint16_t numStations; 2. Announce:uint8_t replyType = 1; uint8_t
-     * songnameSize; char songname[songnameSize]; 3. InvalidCommand:uint8_t
-     * replyType = 2; uint8_t replyStringSize; char
-     * replyString[replyStringSize];
-     */
+    //###### Comandos do cliente para o servidor ######
+    // 1. Hello:      uint8_t commandType= 0;  uint16_t udpPort;
+    // 2. SetStation: uint8_t commandType = 1; uint16_t stationNumber;
+    //###### Respostas do servidor para o cliente ######
+    // 1. Welcome:        uint8_t replyType = 0; uint16_t numStations;
+    // 2. Announce:       uint8_t replyType = 1; uint8_t songnameSize;    char songname[songnameSize];
+    // 3. InvalidCommand: uint8_t replyType = 2; uint8_t replyStringSize; char replyString[replyStringSize];
+    
     private char commandType;
     private int updPort;
     private int stationNumber;

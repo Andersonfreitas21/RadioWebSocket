@@ -39,8 +39,8 @@ public class Snowcast_control {
             // 1. Welcome:        uint8_t replyType = 0; uint16_t numStations;
             // 2. Announce:       uint8_t replyType = 1; uint8_t songnameSize;    char songname[songnameSize];
             // 3. InvalidCommand: uint8_t replyType = 2; uint8_t replyStringSize; char replyString[replyStringSize];
-            
             //Instanciando o protocolo HELLO
+            // 1. Hello: uint8_t commandType= 0;  uint16_t udpPort;
             Mensagem protocoloHello = new Mensagem();
             protocoloHello.setCommandType('0');
             protocoloHello.setUpdPort(portUDPCliente);
@@ -51,40 +51,37 @@ public class Snowcast_control {
             output.flush();
 
             //Recebendo a resposta do servidor
+            // 1. Welcome: uint8_t replyType = 0; uint16_t numStations;
             Mensagem protocoloWelcome = (Mensagem) input.readObject();
 
-            switch (protocoloWelcome.getReplayType()) {
-                case '0':
-                    //Protocolo de comunicação OK
-                    
-                    //Recebendo o número de estações 
-                    int numEstacoes = protocoloWelcome.getNumStation();
-                    System.out.println("Número de estações : " + numEstacoes);
-                    
-                    //Listando as estações na grid Jtable1
-                    //view.RetornoDados(protocoloWelcome.getEstacoes());
+            if (protocoloWelcome.getReplayType() == '0') {
+                //Protocolo de comunicação OK
+                //Recebendo o número de estações 
+                int numEstacoes = protocoloWelcome.getNumStation();
+                System.out.println("Número de estações : " + numEstacoes);
 
-                    //Cliente escolhe a estação para tocar a canção
-                    Mensagem protocoloSetStation = new Mensagem();
+            } else {
+                JOptionPane.showMessageDialog(null, "Erro protocolo Welcome.");
+            }
 
-                    //protocoloSetStation.setNumStation(est);
-                    //Enviando para o servidor o número da estação selecionada
-                    output.writeObject(protocoloSetStation.getNumStation());
-                    output.flush();
+            //Recebendo as estações <estação><nomeCanção>
+            //2. Announce:       uint8_t replyType = 1; uint8_t songnameSize;    char songname[songnameSize];
+            Mensagem protocoloAnnounce = (Mensagem) input.readObject();
 
-                    break;
-                case '1':
-                    //2. Announce:uint8_t replyType = 1; uint8_t songnameSize; char songname[songnameSize];
-                    System.out.println("uint8_t songnameSize; char songname[songnameSize]");
+            if (protocoloAnnounce.getReplayType() == '1') {
+                //Listando as estações na grid Jtable1
+                view.RetornoDados(protocoloAnnounce.getEstacoes());
 
-                    break;
-                case '2':
-                    //3.InvalidCommand:uint8_t replyType = 2; uint8_t replyStringSize; char replyString[replyStringSize];
-                    JOptionPane.showMessageDialog(null, "InvalidCommand");
-                    break;
-                default:
-                    System.out.println("Erro default");
-                    break;
+                //Cliente escolhe a estação para tocar a canção
+                Mensagem protocoloSetStation = new Mensagem();
+
+                //protocoloSetStation.setNumStation(est);
+                //Enviando para o servidor o número da estação selecionada
+                output.writeObject(protocoloSetStation.getNumStation());
+                output.flush();
+
+            } else {
+                JOptionPane.showMessageDialog(null, "Erro protocolo Announce.");
             }
 
             //Fechar os streams de entrada e saída

@@ -37,6 +37,7 @@ public class Snowcast_server {
 
     private ServerSocket serverSocket;
     private final int portServer = 55555;
+    private final int numEstacoes = 1;
     Snowcast_server server;
     Snowcast_server_fr view;
 
@@ -79,29 +80,28 @@ public class Snowcast_server {
 
             //Verificando o comando HELLO
             if (protocoloHello.getCommandType() == '0') {
-                //Comando do cliente recebido com sucesso: Comando HELLO - CLIENTE ---> socket ----> SERVIDOR
+                // 1. Hello: uint8_t commandType= 0;  uint16_t udpPort;
                 int portUDPCliente = protocoloHello.getUpdPort();
 
                 //Cria o protocolo Welcome para se comunicar com o cliente
+                // 1. Welcome: uint8_t replyType = 0; uint16_t numStations;
                 Mensagem protocoloWelcome = new Mensagem();
                 protocoloWelcome.setReplayType('0');
-                protocoloWelcome.setNumStation(1);
+                protocoloWelcome.setNumStation(numEstacoes);
                 //Enviando o protocolo Welcome ao cliente
                 output.writeObject(protocoloWelcome);
                 
+                //Cria o protocolo Announce para enviar as estações
                 Mensagem protocoloAnnounce = new Mensagem();
                 
-                //Criando uma interface 
+                //Criando uma interface Map com chave e valor, listando as estações
                 Map<String, String> estacoes = new HashMap<>();
-                estacoes.put("FM Araibu", "Canção 1");
-                //Enviando o protocolo Welcome ao cliente
+                estacoes.put("FM Araibu", "The Zephyr Song");
                 protocoloAnnounce.setEstacoes(estacoes);
-
-                //Envia dados de controle (Estações)
-
-//                output.writeUTF("Estações : <estação1>||<arquivo1>, <estação2>||<arquivo2>, <estação3>||<arquivo3>");
-//                output.flush();
-
+                
+                //Enviando o protocolo Welcome ao cliente
+                output.writeObject(protocoloAnnounce);
+                output.flush();          
 
                 //Recebendo o número da estação selecionada pelo cliente
                 int numStation = (Integer) input.readObject();
