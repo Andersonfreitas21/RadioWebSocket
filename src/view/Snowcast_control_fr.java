@@ -5,7 +5,7 @@ import clientes.Snowcast_control;
 
 /**
  *
- * @author Programador-03
+ * @author Anderson Freitas
  */
 public class Snowcast_control_fr extends javax.swing.JFrame {
 
@@ -13,8 +13,8 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
         initComponents();
     }
 
-    public void RetornoDados(String estacoes) {
-
+    public void RetornoDados(Object estacoes) {
+        System.out.println(estacoes);
     }
 
     @SuppressWarnings("unchecked")

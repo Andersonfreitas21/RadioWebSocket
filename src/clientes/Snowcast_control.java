@@ -4,17 +4,13 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-//import javax.swing.JOptionPane;
 import util.Mensagem;
 import view.Snowcast_control_fr;
 
 /**
  *
- * @author Programador-03
+ * @author Anderson Freitas
  */
 public class Snowcast_control {
 
@@ -60,9 +56,13 @@ public class Snowcast_control {
             switch (protocoloWelcome.getReplayType()) {
                 case '0':
                     //Protocolo de comunicação OK
-                    //System.out.println("Número de estações : " + protocoloWelcome.getNumStation());
-                    String estacoes = input.readUTF();
-                    view.RetornoDados(estacoes);
+                    
+                    //Recebendo o número de estações 
+                    int numEstacoes = protocoloWelcome.getNumStation();
+                    System.out.println("Número de estações : " + numEstacoes);
+                    
+                    //Listando as estações na grid Jtable1
+                    //view.RetornoDados(protocoloWelcome.getEstacoes());
 
                     //Cliente escolhe a estação para tocar a canção
                     Mensagem protocoloSetStation = new Mensagem();
@@ -92,7 +92,7 @@ public class Snowcast_control {
             output.close();
 
         } catch (IOException ex) {
-            Logger.getLogger(Snowcast_control.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Erro :" + ex.getMessage());
         }
     }
 }
