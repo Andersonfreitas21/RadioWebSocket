@@ -92,8 +92,9 @@ public class Snowcast_server {
                 output.writeObject(protocoloWelcome);
                 
                 //Cria o protocolo Announce para enviar as estações
+                // 2. Announce: uint8_t replyType = 1; uint8_t songnameSize;    char songname[songnameSize];
                 Mensagem protocoloAnnounce = new Mensagem();
-                
+                protocoloAnnounce.setReplayType('1');
                 //Criando uma interface Map com chave e valor, listando as estações
                 Map<String, String> estacoes = new HashMap<>();
                 estacoes.put("FM Araibu", "The Zephyr Song");
@@ -104,8 +105,8 @@ public class Snowcast_server {
                 output.flush();          
 
                 //Recebendo o número da estação selecionada pelo cliente
-                int numStation = (Integer) input.readObject();
-                System.out.println("Estação selecionada pelo cliente : " + numStation);
+//                int numStation = (Integer) input.readObject();
+//                System.out.println("Estação selecionada pelo cliente : " + numStation);
 
                 //Enviando arquivo da canção para cliente UDP
             } else {
@@ -142,7 +143,7 @@ public class Snowcast_server {
                 server.trataConexao(socket);
 
                 //Fechando conexão
-                server.fechaConexao(socket);
+                //server.fechaConexao(socket);
 
                 System.out.println("Aguardando clientes...");
             }
@@ -153,15 +154,15 @@ public class Snowcast_server {
         }
     }
 
-    public void stopServer() throws IOException {
-        //Instacia um objeto tipo Snowcast_server
-        server = new Snowcast_server();
-
-        //Espera a solicitação de uma conexão do cliente
-        Socket socket = server.esperaConexão();
-
-        server.fechaConexao(socket);
-    }
+//    public void stopServer() throws IOException {
+//        //Instacia um objeto tipo Snowcast_server
+//        server = new Snowcast_server();
+//
+//        //Espera a solicitação de uma conexão do cliente
+//        Socket socket = server.esperaConexão();
+//
+//        server.fechaConexao(socket);
+//    }
 
 //    public static void main(String[] agrs) throws IOException {
 //        try {

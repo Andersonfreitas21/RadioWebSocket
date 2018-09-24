@@ -45,7 +45,7 @@ public class Snowcast_control {
             protocoloHello.setCommandType('0');
             protocoloHello.setUpdPort(portUDPCliente);
 
-            //Enviando porta UDP para o servidor
+            //Enviando protocolo Hello para o servidor
             output.writeObject(protocoloHello);
             //Isso irá gravar quaisquer bytes de saída em buffer e flush através do fluxo subjacente.
             output.flush();
@@ -65,7 +65,7 @@ public class Snowcast_control {
             }
 
             //Recebendo as estações <estação><nomeCanção>
-            //2. Announce:       uint8_t replyType = 1; uint8_t songnameSize;    char songname[songnameSize];
+            //2. Announce: uint8_t replyType = 1; uint8_t songnameSize; char songname[songnameSize];
             Mensagem protocoloAnnounce = (Mensagem) input.readObject();
 
             if (protocoloAnnounce.getReplayType() == '1') {
@@ -73,15 +73,16 @@ public class Snowcast_control {
                 view.RetornoDados(protocoloAnnounce.getEstacoes());
 
                 //Cliente escolhe a estação para tocar a canção
-                Mensagem protocoloSetStation = new Mensagem();
+                //Mensagem protocoloSetStation = new Mensagem();
 
                 //protocoloSetStation.setNumStation(est);
                 //Enviando para o servidor o número da estação selecionada
-                output.writeObject(protocoloSetStation.getNumStation());
-                output.flush();
+                //output.writeObject(protocoloSetStation.getNumStation());
+                //output.flush();
 
             } else {
                 JOptionPane.showMessageDialog(null, "Erro protocolo Announce.");
+                //System.out.println("Erro protocolo Announce: " + protocoloAnnounce.getReplayType());
             }
 
             //Fechar os streams de entrada e saída

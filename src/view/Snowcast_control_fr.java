@@ -1,7 +1,11 @@
 package view;
 
 import clientes.Snowcast_control;
-
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -9,12 +13,19 @@ import clientes.Snowcast_control;
  */
 public class Snowcast_control_fr extends javax.swing.JFrame {
 
+    Map<String, String> estacoes = new HashMap<>();
+    private DefaultTableModel modelo;
+
     public Snowcast_control_fr() {
         initComponents();
     }
 
-    public void RetornoDados(Object estacoes) {
-        System.out.println(estacoes);
+    //Método para exibir na grade 
+    public void RetornoDados(Object obj) {
+        this.estacoes = (Map<String, String>) obj;
+        modelo = (DefaultTableModel) jTableEstacoes.getModel();
+        Object[] dados = {estacoes.keySet(),estacoes.values()};
+        modelo.addRow(dados);
     }
 
     @SuppressWarnings("unchecked")
@@ -31,7 +42,7 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
         btn_listar = new javax.swing.JButton();
         btn_cancelar = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTableEstacoes = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -73,9 +84,9 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
         btn_listar.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
         btn_listar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8_Playlist_24px.png"))); // NOI18N
         btn_listar.setText("Listar Estações");
-        btn_listar.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btn_listarMouseClicked(evt);
+        btn_listar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_listarActionPerformed(evt);
             }
         });
 
@@ -84,8 +95,8 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
 
         jScrollPane2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Lista de Estações", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.ABOVE_TOP, new java.awt.Font("Century Gothic", 0, 10))); // NOI18N
 
-        jTable1.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTableEstacoes.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        jTableEstacoes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -108,16 +119,16 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setToolTipText("");
-        jTable1.setColumnSelectionAllowed(true);
-        jTable1.getTableHeader().setReorderingAllowed(false);
-        jScrollPane2.setViewportView(jTable1);
-        jTable1.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setResizable(false);
-            jTable1.getColumnModel().getColumn(0).setPreferredWidth(50);
-            jTable1.getColumnModel().getColumn(1).setResizable(false);
-            jTable1.getColumnModel().getColumn(1).setPreferredWidth(50);
+        jTableEstacoes.setToolTipText("");
+        jTableEstacoes.setColumnSelectionAllowed(true);
+        jTableEstacoes.getTableHeader().setReorderingAllowed(false);
+        jScrollPane2.setViewportView(jTableEstacoes);
+        jTableEstacoes.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        if (jTableEstacoes.getColumnModel().getColumnCount() > 0) {
+            jTableEstacoes.getColumnModel().getColumn(0).setResizable(false);
+            jTableEstacoes.getColumnModel().getColumn(0).setPreferredWidth(50);
+            jTableEstacoes.getColumnModel().getColumn(1).setResizable(false);
+            jTableEstacoes.getColumnModel().getColumn(1).setPreferredWidth(50);
         }
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -129,18 +140,17 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(jLabel3)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(txtEstacao, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btn_enviar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, 18)
-                            .addComponent(btn_cancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addContainerGap()
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtEstacao, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btn_enviar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btn_cancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(121, 121, 121)
@@ -178,20 +188,17 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btn_listarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_listarMouseClicked
-        //Cria uma instância da classe cliente TCP
+    private void btn_listarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_listarActionPerformed
         Snowcast_control clienteTCP = new Snowcast_control();
-        
         try {
             clienteTCP.conexaoTCP(this);
         } catch (ClassNotFoundException ex) {
-            System.out.println("Erro na instância da classe cliente : " + ex.getMessage());
+            Logger.getLogger(Snowcast_control_fr.class.getName()).log(Level.SEVERE, null, ex);
         }
-       
-    }//GEN-LAST:event_btn_listarMouseClicked
+    }//GEN-LAST:event_btn_listarActionPerformed
 
     public static void main(String args[]) {
-    
+
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Windows".equals(info.getName())) {
@@ -202,7 +209,7 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Snowcast_control_fr.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-  
+
         java.awt.EventQueue.invokeLater(() -> {
             new Snowcast_control_fr().setVisible(true);
         });
@@ -218,7 +225,7 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTableEstacoes;
     private javax.swing.JTextField txtEstacao;
     // End of variables declaration//GEN-END:variables
 }
