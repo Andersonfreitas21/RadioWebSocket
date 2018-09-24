@@ -99,7 +99,9 @@ public class Snowcast_server {
                 Map<String, String> estacoes = new HashMap<>();
                 estacoes.put("FM Araibu", "The Zephyr Song");
                 estacoes.put("Rádio Progresso", "Breaking The Girl");
-                estacoes.put("SomZoomSit", "Californication");
+                estacoes.put("Som Zoom Site", "Terra sem cep");
+                estacoes.put("SomZoomSat", "Californication");
+                estacoes.put("Jovem Pan", "Coração de Frango");
                 
                 protocoloAnnounce.setEstacoes(estacoes);
                 
@@ -108,8 +110,8 @@ public class Snowcast_server {
                 output.flush();          
 
                 //Recebendo o número da estação selecionada pelo cliente
-//                int numStation = (Integer) input.readObject();
-//                System.out.println("Estação selecionada pelo cliente : " + numStation);
+                //int numStation = (Integer) input.readObject();
+                //System.out.println("Estação selecionada pelo cliente : " + numStation);
 
                 //Enviando arquivo da canção para cliente UDP
             } else {

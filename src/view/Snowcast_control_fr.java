@@ -24,9 +24,13 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
     public void RetornoDados(Object obj) {
         this.estacoes = (Map<String, String>) obj;
         modelo = (DefaultTableModel) jTableEstacoes.getModel();
-        Object[] dados = {estacoes.keySet(),estacoes.values()};
-//        modelo.setValueAt(obj, jTableEstacoes.set, NORMAL);
-        modelo.addRow(dados);
+
+        for (String key : estacoes.keySet()) {
+
+            //Capturamos o valor a partir da chave
+            String value = estacoes.get(key);
+            modelo.addRow(new String[]{key, value});
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -80,7 +84,7 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
         jLabel3.setText("Estação: ");
 
         btn_enviar.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        btn_enviar.setText("Enviar");
+        btn_enviar.setText("Play");
 
         btn_listar.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
         btn_listar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8_Playlist_24px.png"))); // NOI18N
@@ -95,7 +99,13 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
         btn_cancelar.setText("Cancelar");
 
         jScrollPane2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Lista de Estações", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.ABOVE_TOP, new java.awt.Font("Century Gothic", 0, 10))); // NOI18N
+        jScrollPane2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jScrollPane2KeyReleased(evt);
+            }
+        });
 
+        jTableEstacoes.setAutoCreateRowSorter(true);
         jTableEstacoes.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
         jTableEstacoes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -121,10 +131,8 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
             }
         });
         jTableEstacoes.setToolTipText("");
-        jTableEstacoes.setColumnSelectionAllowed(true);
         jTableEstacoes.getTableHeader().setReorderingAllowed(false);
         jScrollPane2.setViewportView(jTableEstacoes);
-        jTableEstacoes.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         if (jTableEstacoes.getColumnModel().getColumnCount() > 0) {
             jTableEstacoes.getColumnModel().getColumn(0).setResizable(false);
             jTableEstacoes.getColumnModel().getColumn(0).setPreferredWidth(50);
@@ -162,17 +170,17 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btn_listar, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(48, 48, 48)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(txtEstacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_enviar)
                     .addComponent(btn_cancelar))
-                .addGap(36, 36, 36))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -187,6 +195,7 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_listarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_listarActionPerformed
@@ -197,6 +206,12 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
             Logger.getLogger(Snowcast_control_fr.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btn_listarActionPerformed
+
+    private void jScrollPane2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jScrollPane2KeyReleased
+        if (jTableEstacoes.getSelectedRow() != -1) {
+            txtEstacao.setText(jTableEstacoes.getName());
+        }
+    }//GEN-LAST:event_jScrollPane2KeyReleased
 
     public static void main(String args[]) {
 

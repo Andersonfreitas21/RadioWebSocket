@@ -115,6 +115,7 @@ public class Snowcast_server_fr extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_starMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_starMouseClicked
