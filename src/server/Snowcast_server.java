@@ -98,6 +98,9 @@ public class Snowcast_server {
                 //Criando uma interface Map com chave e valor, listando as estações
                 Map<String, String> estacoes = new HashMap<>();
                 estacoes.put("FM Araibu", "The Zephyr Song");
+                estacoes.put("Rádio Progresso", "Breaking The Girl");
+                estacoes.put("SomZoomSit", "Californication");
+                
                 protocoloAnnounce.setEstacoes(estacoes);
                 
                 //Enviando o protocolo Welcome ao cliente

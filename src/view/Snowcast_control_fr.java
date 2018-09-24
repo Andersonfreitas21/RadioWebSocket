@@ -25,6 +25,7 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
         this.estacoes = (Map<String, String>) obj;
         modelo = (DefaultTableModel) jTableEstacoes.getModel();
         Object[] dados = {estacoes.keySet(),estacoes.values()};
+//        modelo.setValueAt(obj, jTableEstacoes.set, NORMAL);
         modelo.addRow(dados);
     }
 
