@@ -99,11 +99,6 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
         btn_cancelar.setText("Cancelar");
 
         jScrollPane2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Lista de Estações", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.ABOVE_TOP, new java.awt.Font("Century Gothic", 0, 10))); // NOI18N
-        jScrollPane2.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                jScrollPane2KeyReleased(evt);
-            }
-        });
 
         jTableEstacoes.setAutoCreateRowSorter(true);
         jTableEstacoes.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
@@ -132,6 +127,16 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
         });
         jTableEstacoes.setToolTipText("");
         jTableEstacoes.getTableHeader().setReorderingAllowed(false);
+        jTableEstacoes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableEstacoesMouseClicked(evt);
+            }
+        });
+        jTableEstacoes.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTableEstacoesKeyReleased(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTableEstacoes);
         if (jTableEstacoes.getColumnModel().getColumnCount() > 0) {
             jTableEstacoes.getColumnModel().getColumn(0).setResizable(false);
@@ -207,11 +212,29 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btn_listarActionPerformed
 
-    private void jScrollPane2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jScrollPane2KeyReleased
-        if (jTableEstacoes.getSelectedRow() != -1) {
-            txtEstacao.setText(jTableEstacoes.getName());
+    private void jTableEstacoesKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableEstacoesKeyReleased
+        if (jTableEstacoes.getSelectedRow() != -1){
+            if (jTableEstacoes.getSelectedColumn() == 0) {
+                txtEstacao.setText(jTableEstacoes.getValueAt(jTableEstacoes.getSelectedRow(), 0).toString());
+                
+                //Integer.parseInt(jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString())
+            } else {
+                txtEstacao.setText(jTableEstacoes.getValueAt(jTableEstacoes.getSelectedRow(), 1).toString());
+            }
         }
-    }//GEN-LAST:event_jScrollPane2KeyReleased
+    }//GEN-LAST:event_jTableEstacoesKeyReleased
+
+    private void jTableEstacoesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableEstacoesMouseClicked
+        if (evt.getClickCount() == 1){
+            if (jTableEstacoes.getSelectedColumn() == 0) {
+                txtEstacao.setText(jTableEstacoes.getValueAt(jTableEstacoes.getSelectedRow(), 0).toString());
+                
+                //Integer.parseInt(jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString())
+            } else {
+                txtEstacao.setText(jTableEstacoes.getValueAt(jTableEstacoes.getSelectedRow(), 1).toString());
+            }
+        }
+    }//GEN-LAST:event_jTableEstacoesMouseClicked
 
     public static void main(String args[]) {
 
