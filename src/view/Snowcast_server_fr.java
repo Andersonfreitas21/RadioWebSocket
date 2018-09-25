@@ -29,7 +29,7 @@ public class Snowcast_server_fr extends javax.swing.JFrame {
         btn_star = new javax.swing.JButton();
         btn_stop = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -123,11 +123,11 @@ public class Snowcast_server_fr extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_starMouseClicked
 
     private void btn_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_stopActionPerformed
-//        try {
-//            servidor.stopServer();
-//        } catch (IOException ex) {
-//            Logger.getLogger(Snowcast_server_fr.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        try {
+            servidor.stopServer();
+        } catch (IOException ex) {
+            Logger.getLogger(Snowcast_server_fr.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btn_stopActionPerformed
 
     public static void main(String args[]) {

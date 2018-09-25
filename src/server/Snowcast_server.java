@@ -97,11 +97,11 @@ public class Snowcast_server {
                 protocoloAnnounce.setReplayType('1');
                 //Criando uma interface Map com chave e valor, listando as estações
                 Map<String, String> estacoes = new HashMap<>();
-                estacoes.put("FM Araibu", "The Zephyr Song");
-                estacoes.put("Rádio Progresso", "Breaking The Girl");
-                estacoes.put("Som Zoom Site", "Terra sem cep");
-                estacoes.put("SomZoomSat", "Californication");
-                estacoes.put("Jovem Pan", "Coração de Frango");
+                estacoes.put("1 - FM Araibu", "The Zephyr Song");
+                estacoes.put("2 - Rádio Progresso", "Breaking The Girl");
+                estacoes.put("3 - Som Zoom Site", "Terra sem cep");
+                estacoes.put("4 - SomZoomSat", "Californication");
+                estacoes.put("5 - Jovem Pan", "Coração de Frango");
                 
                 protocoloAnnounce.setEstacoes(estacoes);
                 
@@ -147,9 +147,6 @@ public class Snowcast_server {
                 //Tratando conexão
                 server.trataConexao(socket);
 
-                //Fechando conexão
-                //server.fechaConexao(socket);
-
                 System.out.println("Aguardando clientes...");
             }
 
@@ -159,15 +156,16 @@ public class Snowcast_server {
         }
     }
 
-//    public void stopServer() throws IOException {
-//        //Instacia um objeto tipo Snowcast_server
-//        server = new Snowcast_server();
-//
-//        //Espera a solicitação de uma conexão do cliente
-//        Socket socket = server.esperaConexão();
-//
-//        server.fechaConexao(socket);
-//    }
+    public void stopServer() throws IOException {
+        
+        //Instacia um objeto tipo Snowcast_server
+        this.server = new Snowcast_server();
+
+        //Espera a solicitação de uma conexão do cliente
+        Socket socket = server.esperaConexão();
+
+        this.server.fechaConexao(socket);
+    }
 
 //    public static void main(String[] agrs) throws IOException {
 //        try {
