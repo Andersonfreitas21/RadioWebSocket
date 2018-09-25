@@ -1,11 +1,15 @@
 package view;
 
 import clientes.Snowcast_control;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
+import util.Mensagem;
 
 /**
  *
@@ -15,21 +19,39 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
 
     Map<String, String> estacoes = new HashMap<>();
     private DefaultTableModel modelo;
+    Mensagem protocoloSetStation = new Mensagem();
+    Snowcast_control clienteTCP;
 
     public Snowcast_control_fr() {
         initComponents();
     }
 
+//    public void enviaSetTation() throws IOException {
+//        Socket socketClienteTCP;
+//        socketClienteTCP = new Socket("127.0.0.1",55555);
+//        ObjectOutputStream output;
+//        output = new ObjectOutputStream(socketClienteTCP.getOutputStream());
+//        //tocar música
+//        //escolhe o id ou nome da estação que o cliente selecionou  
+//        //envia via protocolo SetStation o número da estação
+//        //2. SetStation: uint8_t commandType = 1; uint16_t stationNumber;
+//        protocoloSetStation.setCommandType('1');
+//        protocoloSetStation.setStationNumber(jTableEstacoes.getSelectedRow());
+//        //System.out.println("Número da estação : " + protocoloSetStation.getStationNumber());
+//        output.writeObject(protocoloSetStation);
+//    }
+
     //Método para exibir na grade 
     public void RetornoDados(Object obj) {
         this.estacoes = (Map<String, String>) obj;
         modelo = (DefaultTableModel) jTableEstacoes.getModel();
+        modelo.setNumRows(0);
 
-        for (String key : estacoes.keySet()) {
+        for (Object key : estacoes.keySet()) {
 
             //Capturamos o valor a partir da chave
-            String value = estacoes.get(key);
-            modelo.addRow(new String[]{key, value});
+            Object value = estacoes.get(key);
+            modelo.addRow(new Object[]{key, value});
         }
     }
 
@@ -80,11 +102,16 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jLabel3.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
         jLabel3.setText("Estação: ");
 
         btn_enviar.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
-        btn_enviar.setText("Play");
+        btn_enviar.setText("Tocar");
+        btn_enviar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_enviarActionPerformed(evt);
+            }
+        });
 
         btn_listar.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
         btn_listar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8_Playlist_24px.png"))); // NOI18N
@@ -97,6 +124,11 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
 
         btn_cancelar.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
         btn_cancelar.setText("Cancelar");
+        btn_cancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_cancelarActionPerformed(evt);
+            }
+        });
 
         jScrollPane2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Lista de Estações", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.ABOVE_TOP, new java.awt.Font("Century Gothic", 0, 10))); // NOI18N
 
@@ -163,11 +195,11 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
                                 .addComponent(txtEstacao, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btn_enviar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(btn_cancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(121, 121, 121)
+                        .addGap(120, 120, 120)
                         .addComponent(btn_listar)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -175,17 +207,17 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(btn_listar, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(txtEstacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_enviar)
                     .addComponent(btn_cancelar))
-                .addContainerGap())
+                .addGap(23, 23, 23))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -204,7 +236,7 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_listarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_listarActionPerformed
-        Snowcast_control clienteTCP = new Snowcast_control();
+        clienteTCP = new Snowcast_control();
         try {
             clienteTCP.conexaoTCP(this);
         } catch (ClassNotFoundException ex) {
@@ -213,10 +245,10 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_listarActionPerformed
 
     private void jTableEstacoesKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableEstacoesKeyReleased
-        if (jTableEstacoes.getSelectedRow() != -1){
+        if (jTableEstacoes.getSelectedRow() != -1) {
             if (jTableEstacoes.getSelectedColumn() == 0) {
                 txtEstacao.setText(jTableEstacoes.getValueAt(jTableEstacoes.getSelectedRow(), 0).toString());
-                
+
                 //Integer.parseInt(jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString())
             } else {
                 txtEstacao.setText(jTableEstacoes.getValueAt(jTableEstacoes.getSelectedRow(), 1).toString());
@@ -225,16 +257,24 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
     }//GEN-LAST:event_jTableEstacoesKeyReleased
 
     private void jTableEstacoesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableEstacoesMouseClicked
-        if (evt.getClickCount() == 1){
+        if (evt.getClickCount() == 1) {
             if (jTableEstacoes.getSelectedColumn() == 0) {
                 txtEstacao.setText(jTableEstacoes.getValueAt(jTableEstacoes.getSelectedRow(), 0).toString());
-                
+
                 //Integer.parseInt(jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString())
             } else {
                 txtEstacao.setText(jTableEstacoes.getValueAt(jTableEstacoes.getSelectedRow(), 1).toString());
             }
         }
     }//GEN-LAST:event_jTableEstacoesMouseClicked
+
+    private void btn_cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cancelarActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_btn_cancelarActionPerformed
+
+    private void btn_enviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_enviarActionPerformed
+
+    }//GEN-LAST:event_btn_enviarActionPerformed
 
     public static void main(String args[]) {
 

@@ -58,7 +58,7 @@ public class Snowcast_control {
                 //Protocolo de comunicação OK
                 //Recebendo o número de estações 
                 int numEstacoes = protocoloWelcome.getNumStation();
-                System.out.println("Número de estações : " + numEstacoes);
+                System.out.println("Quantidade de estações disponíveis  : " + numEstacoes);
 
             } else {
                 JOptionPane.showMessageDialog(null, "Erro protocolo Welcome.");
@@ -71,14 +71,6 @@ public class Snowcast_control {
             if (protocoloAnnounce.getReplayType() == '1') {
                 //Listando as estações na grid Jtable1
                 view.RetornoDados(protocoloAnnounce.getEstacoes());
-
-                //Cliente escolhe a estação para tocar a canção
-                //Mensagem protocoloSetStation = new Mensagem();
-
-                //protocoloSetStation.setNumStation(est);
-                //Enviando para o servidor o número da estação selecionada
-                //output.writeObject(protocoloSetStation.getNumStation());
-                //output.flush();
 
             } else {
                 JOptionPane.showMessageDialog(null, "Erro protocolo Announce.");

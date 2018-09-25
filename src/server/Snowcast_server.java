@@ -73,7 +73,7 @@ public class Snowcast_server {
             ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
             ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
 
-            //Cria um Objeto tido Mensagem para se comunicar com o servidor
+            //Cria um Objeto tipo Mensagem para se comunicar com o servidor
             //Recebendo o comando Hello do cliente 
             //Lê um objeto ObjectInputStream, porta UDP Cliente
             Mensagem protocoloHello = (Mensagem) input.readObject();
@@ -101,7 +101,6 @@ public class Snowcast_server {
                 estacoes.put("2 - Rádio Progresso", "Breaking The Girl");
                 estacoes.put("3 - Som Zoom Site", "Terra sem cep");
                 estacoes.put("4 - SomZoomSat", "Californication");
-                estacoes.put("5 - Jovem Pan", "Coração de Frango");
                 
                 protocoloAnnounce.setEstacoes(estacoes);
                 
@@ -156,16 +155,16 @@ public class Snowcast_server {
         }
     }
 
-    public void stopServer() throws IOException {
-        
-        //Instacia um objeto tipo Snowcast_server
-        this.server = new Snowcast_server();
-
-        //Espera a solicitação de uma conexão do cliente
-        Socket socket = server.esperaConexão();
-
-        this.server.fechaConexao(socket);
-    }
+//    public void stopServer() throws IOException {
+//        
+//        //Instacia um objeto tipo Snowcast_server
+//        this.server = new Snowcast_server();
+//
+//        //Espera a solicitação de uma conexão do cliente
+//        Socket socket = server.esperaConexão();
+//
+//        this.server.fechaConexao(socket);
+//    }
 
 //    public static void main(String[] agrs) throws IOException {
 //        try {
