@@ -37,7 +37,7 @@ public class Snowcast_server {
 
     private ServerSocket serverSocket;
     private final int portServer = 55555;
-    private final int numEstacoes = 1;
+    private final int numEstacoes = 5;
     Snowcast_server server;
     Snowcast_server_fr view;
 
