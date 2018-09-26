@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import util.Mensagem;
 
@@ -64,6 +65,20 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
 
     }
 
+    public void enviaEstacao(String estacao) {
+        if (txtEstacao.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Command Invalid - Selecione uma estação.");
+        } else {
+            for (int i = 0; i < modelo.getRowCount(); i++) {
+                if (modelo.getValueAt(i, 0).toString().contains(estacao)) {
+                    JOptionPane.showMessageDialog(null, jTableEstacoes.getValueAt(i, 0).toString());
+                } else {
+                    JOptionPane.showMessageDialog(null, "Command Invalid - Estação inexistente.");
+                }
+            }
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -113,6 +128,12 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
 
         jLabel3.setFont(new java.awt.Font("Century Gothic", 0, 14)); // NOI18N
         jLabel3.setText("Estação: ");
+
+        txtEstacao.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtEstacaoKeyReleased(evt);
+            }
+        });
 
         btn_enviar.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
         btn_enviar.setText("Tocar");
@@ -266,8 +287,14 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_cancelarActionPerformed
 
     private void btn_enviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_enviarActionPerformed
-        
+        enviaEstacao(txtEstacao.getText());
     }//GEN-LAST:event_btn_enviarActionPerformed
+
+    private void txtEstacaoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEstacaoKeyReleased
+        if (txtEstacao.getText().equals("0")) {
+            JOptionPane.showMessageDialog(null, "DEU CERTO");
+        }
+    }//GEN-LAST:event_txtEstacaoKeyReleased
 
     public static void main(String args[]) {
 
