@@ -72,8 +72,6 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
             for (int i = 0; i < modelo.getRowCount(); i++) {
                 if (modelo.getValueAt(i, 0).toString().contains(estacao)) {
                     JOptionPane.showMessageDialog(null, jTableEstacoes.getValueAt(i, 0).toString());
-                } else {
-                    JOptionPane.showMessageDialog(null, "Command Invalid - Estação inexistente.");
                 }
             }
         }
