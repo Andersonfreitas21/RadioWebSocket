@@ -54,21 +54,23 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
         });
     }
 
-    public void setCampo() {
-        if ((jTableEstacoes.getSelectedRow() != -1) || (jTableEstacoes.getSelectedColumn() == 0)) {
-            if (jTableEstacoes.getSelectedColumn() == 0) {
-                txtEstacao.setText(jTableEstacoes.getValueAt(jTableEstacoes.getSelectedRow(), 0).toString());
-            } else {
-                txtEstacao.setText(jTableEstacoes.getValueAt(jTableEstacoes.getSelectedRow(), 1).toString());
-            }
-        }
-
-    }
+//    public void setCampo() {
+//        if ((jTableEstacoes.getSelectedRow() != -1) || (jTableEstacoes.getSelectedColumn() == 0)) {
+//            if (jTableEstacoes.getSelectedColumn() == 0) {
+//                txtEstacao.setText(jTableEstacoes.getValueAt(jTableEstacoes.getSelectedRow(), 0).toString());
+//            } else {
+//                txtEstacao.setText(jTableEstacoes.getValueAt(jTableEstacoes.getSelectedRow(), 1).toString());
+//            }
+//        }
+//    }
 
     public void enviaEstacao(String estacao) {
         if (txtEstacao.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Command Invalid - Selecione uma estação.");
-        } else {
+        } else if(Integer.parseInt(txtEstacao.getText()) > jTableEstacoes.getRowCount()) {
+            JOptionPane.showMessageDialog(null, "Invalido");
+        } 
+        else {
             for (int i = 0; i < modelo.getRowCount(); i++) {
                 if (modelo.getValueAt(i, 0).toString().contains(estacao)) {
                     JOptionPane.showMessageDialog(null, jTableEstacoes.getValueAt(i, 0).toString());
@@ -273,11 +275,11 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_listarActionPerformed
 
     private void jTableEstacoesKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableEstacoesKeyReleased
-        setCampo();
+        //setCampo();
     }//GEN-LAST:event_jTableEstacoesKeyReleased
 
     private void jTableEstacoesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableEstacoesMouseClicked
-        setCampo();
+        //setCampo();
     }//GEN-LAST:event_jTableEstacoesMouseClicked
 
     private void btn_cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cancelarActionPerformed
