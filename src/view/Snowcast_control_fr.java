@@ -40,19 +40,28 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
 //        //System.out.println("Número da estação : " + protocoloSetStation.getStationNumber());
 //        output.writeObject(protocoloSetStation);
 //    }
-
     //Método para exibir na grade 
     public void RetornoDados(Object obj) {
         this.estacoes = (Map<String, String>) obj;
         modelo = (DefaultTableModel) jTableEstacoes.getModel();
         modelo.setNumRows(0);
 
-        for (Object key : estacoes.keySet()) {
-
+        estacoes.keySet().forEach((key) -> {
             //Capturamos o valor a partir da chave
-            Object value = estacoes.get(key);
-            modelo.addRow(new Object[]{key, value});
+            String value = estacoes.get(key);
+            modelo.addRow(new String[]{key, value});
+        });
+    }
+
+    public void setCampo() {
+        if ((jTableEstacoes.getSelectedRow() != -1) || (jTableEstacoes.getSelectedColumn() == 0)) {
+            if (jTableEstacoes.getSelectedColumn() == 0) {
+                txtEstacao.setText(jTableEstacoes.getValueAt(jTableEstacoes.getSelectedRow(), 0).toString());
+            } else {
+                txtEstacao.setText(jTableEstacoes.getValueAt(jTableEstacoes.getSelectedRow(), 1).toString());
+            }
         }
+
     }
 
     @SuppressWarnings("unchecked")
@@ -245,27 +254,11 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_listarActionPerformed
 
     private void jTableEstacoesKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableEstacoesKeyReleased
-        if (jTableEstacoes.getSelectedRow() != -1) {
-            if (jTableEstacoes.getSelectedColumn() == 0) {
-                txtEstacao.setText(jTableEstacoes.getValueAt(jTableEstacoes.getSelectedRow(), 0).toString());
-
-                //Integer.parseInt(jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString())
-            } else {
-                txtEstacao.setText(jTableEstacoes.getValueAt(jTableEstacoes.getSelectedRow(), 1).toString());
-            }
-        }
+        setCampo();
     }//GEN-LAST:event_jTableEstacoesKeyReleased
 
     private void jTableEstacoesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableEstacoesMouseClicked
-        if (evt.getClickCount() == 1) {
-            if (jTableEstacoes.getSelectedColumn() == 0) {
-                txtEstacao.setText(jTableEstacoes.getValueAt(jTableEstacoes.getSelectedRow(), 0).toString());
-
-                //Integer.parseInt(jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString())
-            } else {
-                txtEstacao.setText(jTableEstacoes.getValueAt(jTableEstacoes.getSelectedRow(), 1).toString());
-            }
-        }
+        setCampo();
     }//GEN-LAST:event_jTableEstacoesMouseClicked
 
     private void btn_cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cancelarActionPerformed
@@ -273,7 +266,7 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_cancelarActionPerformed
 
     private void btn_enviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_enviarActionPerformed
-
+        
     }//GEN-LAST:event_btn_enviarActionPerformed
 
     public static void main(String args[]) {
@@ -283,10 +276,12 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
                 if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Snowcast_control_fr.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Snowcast_control_fr.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
         java.awt.EventQueue.invokeLater(() -> {
