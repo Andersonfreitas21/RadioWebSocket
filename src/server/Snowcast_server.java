@@ -22,8 +22,12 @@ package server;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JOptionPane;
@@ -37,8 +41,11 @@ import view.Snowcast_server_fr;
 public class Snowcast_server {
 
     private ServerSocket serverSocket;
-    private final int portServer = 55555;
+    private final int portTCPServer = 55555;
+    private int portUDPServer = 44444;
+    private int portUDP;
     private final int numEstacoes = 4;
+    private int stationNumber;
 
     Mensagem protocoloHello;
     Mensagem protocoloWelcome;
@@ -58,6 +65,45 @@ public class Snowcast_server {
     private Socket esperaConexão() throws IOException {
         Socket socket = serverSocket.accept();
         return socket;
+    }
+
+    private void udpServer(int portaUdpCliente, int stationNumber) throws SocketException, IOException {
+        this.portUDP = portaUdpCliente;
+        this.stationNumber = stationNumber;
+        int numConn = 1;
+
+        DatagramSocket serverSocket = new DatagramSocket(portTCPServer);
+
+        byte[] receiveData = new byte[1024];
+        byte[] sendData = new byte[1024];
+
+        while (true) {
+
+            DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+            System.out.println("Esperando por datagrama UDP na porta " + portUDPServer);
+            serverSocket.receive(receivePacket);
+            System.out.print("Datagrama UDP [" + numConn + "] recebido...");
+
+            String sentence = new String(receivePacket.getData());
+            System.out.println(sentence);
+
+            InetAddress IPAddress = receivePacket.getAddress();
+
+            int port = receivePacket.getPort();
+
+            String capitalizedSentence = sentence.toUpperCase();
+
+            sendData = capitalizedSentence.getBytes();
+
+            DatagramPacket sendPacket = new DatagramPacket(sendData,
+                    sendData.length, IPAddress, port);
+
+            System.out.print("Enviando " + capitalizedSentence + "...");
+
+            serverSocket.send(sendPacket);
+            System.out.println("OK\n");
+        }
+
     }
 
     //Fechando o socket
@@ -125,6 +171,7 @@ public class Snowcast_server {
 
                     //Enviando arquivo da canção para cliente UDP
                     //Se conectar com o cliente UDP com a estação escolhida
+                    udpServer(portUDPCliente,protocoloSetStation.getNumStation());
                 } else {
                     JOptionPane.showMessageDialog(null, "Erro no protocolo SetStation ");
                 }
@@ -153,7 +200,7 @@ public class Snowcast_server {
             System.out.println("Aguardando conexão...");
 
             //Cria uma conexão
-            server.criaServerSocket(portServer);
+            server.criaServerSocket(portTCPServer);
 
             while (true) {
                 //Espera a solicitação de uma conexão do cliente
