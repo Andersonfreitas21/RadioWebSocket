@@ -15,6 +15,11 @@ import view.Snowcast_control_fr;
 public class Snowcast_control {
 
     Snowcast_control_fr view;
+    int stationNumber;
+
+    public void getStationNumber(int stationNumber) {
+        this.stationNumber = stationNumber;
+    }
 
     public void conexaoTCP(Snowcast_control_fr view) throws ClassNotFoundException {
         try {
@@ -71,6 +76,13 @@ public class Snowcast_control {
             if (protocoloAnnounce.getReplayType() == '1') {
                 //Listando as estações na grid Jtable1
                 view.RetornoDados(protocoloAnnounce.getEstacoes());
+
+            // 2. SetStation: uint8_t commandType = 1; uint16_t stationNumber;
+                Mensagem protocoloSetStation = new Mensagem();
+                protocoloSetStation.setCommandType('1');
+                protocoloSetStation.setNumStation(stationNumber);
+                output.writeObject(protocoloSetStation);
+                output.flush();
 
             } else {
                 JOptionPane.showMessageDialog(null, "Erro protocolo Announce.");
