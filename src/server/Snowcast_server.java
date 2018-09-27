@@ -19,6 +19,7 @@
 //                    ele deve responder com InvalidCommand e fechar a conexão com o cliente
 package server;
 
+import clientes.Snowcast_listener;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -55,6 +56,7 @@ public class Snowcast_server {
 
     Snowcast_server server;
     Snowcast_server_fr view;
+    Snowcast_listener clienteUDP;
 
     //Cria uma conexão ServerSocket
     private void criaServerSocket(int portaServer) throws IOException {
@@ -65,45 +67,6 @@ public class Snowcast_server {
     private Socket esperaConexão() throws IOException {
         Socket socket = serverSocket.accept();
         return socket;
-    }
-
-    private void udpServer(int portaUdpCliente, int stationNumber) throws SocketException, IOException {
-        this.portUDP = portaUdpCliente;
-        this.stationNumber = stationNumber;
-        int numConn = 1;
-
-        DatagramSocket serverSocket = new DatagramSocket(portUDPServer);
-
-        byte[] dadosRecebidos = new byte[1024];
-        byte[] dadosEnviados = new byte[1024];
-
-        while (true) {
-
-            DatagramPacket pacoteRecebido = new DatagramPacket(dadosRecebidos, dadosRecebidos.length);
-            System.out.println("Esperando por datagrama UDP na porta " + portUDPServer);
-            serverSocket.receive(pacoteRecebido);
-            System.out.print("Datagrama UDP [" + numConn + "] recebido...");
-
-            String sentence = new String(pacoteRecebido.getData());
-            System.out.println(sentence);
-
-            InetAddress IPAddress = pacoteRecebido.getAddress();
-
-            int port = pacoteRecebido.getPort();
-
-            String capitalizedSentence = sentence.toUpperCase();
-
-            dadosEnviados = capitalizedSentence.getBytes();
-
-            DatagramPacket sendPacket = new DatagramPacket(dadosEnviados,
-                    dadosEnviados.length, IPAddress, port);
-
-            System.out.print("Enviando " + capitalizedSentence + "...");
-
-            serverSocket.send(sendPacket);
-            System.out.println("OK\n");
-        }
-
     }
 
     //Fechando o socket
@@ -171,7 +134,7 @@ public class Snowcast_server {
 
                     //Enviando arquivo da canção para cliente UDP
                     //Se conectar com o cliente UDP com a estação escolhida
-                    udpServer(portUDPCliente,protocoloSetStation.getNumStation());
+                    udpServer(portUDPCliente, protocoloSetStation.getNumStation());
                 } else {
                     JOptionPane.showMessageDialog(null, "Erro no protocolo SetStation ");
                 }
@@ -216,6 +179,46 @@ public class Snowcast_server {
             //Tratando erros na comunicação Socket
             JOptionPane.showMessageDialog(null, "Erro de comunicação do Socket: " + ex.getMessage());
         }
+    }
+
+    private void udpServer(int portaUdpCliente, int stationNumber) throws SocketException, IOException {
+        this.portUDP = portaUdpCliente;
+        this.stationNumber = stationNumber;
+        int numConn = 1;
+
+        DatagramSocket serverSocket = new DatagramSocket(portUDPServer);
+        clienteUDP.starClienteUdp();
+
+        byte[] dadosRecebidos = new byte[1024];
+        byte[] dadosEnviados = new byte[1024];
+
+        while (true) {
+
+            DatagramPacket pacoteRecebido = new DatagramPacket(dadosRecebidos, dadosRecebidos.length);
+            System.out.println("Esperando por datagrama UDP na porta " + portUDPServer);
+            serverSocket.receive(pacoteRecebido);
+            System.out.print("Datagrama UDP [" + numConn + "] recebido...");
+
+            String sentence = new String(pacoteRecebido.getData());
+            System.out.println(sentence);
+
+            InetAddress IPAddress = pacoteRecebido.getAddress();
+
+            int port = pacoteRecebido.getPort();
+
+            String capitalizedSentence = sentence.toUpperCase();
+
+            dadosEnviados = capitalizedSentence.getBytes();
+
+            DatagramPacket sendPacket = new DatagramPacket(dadosEnviados,
+                    dadosEnviados.length, IPAddress, port);
+
+            System.out.print("Enviando " + capitalizedSentence + "...");
+
+            serverSocket.send(sendPacket);
+            System.out.println("OK\n");
+        }
+
     }
 
 //    public void stopServer() throws IOException {

@@ -59,7 +59,7 @@ public class Snowcast_server_fr extends javax.swing.JFrame {
 
         btn_star.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
         btn_star.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8_Play_Property_36px.png"))); // NOI18N
-        btn_star.setText("Iniciar Servirdor");
+        btn_star.setText("Iniciar Servidor");
         btn_star.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_starActionPerformed(evt);
@@ -122,12 +122,13 @@ public class Snowcast_server_fr extends javax.swing.JFrame {
 //        } catch (IOException ex) {
 //            Logger.getLogger(Snowcast_server_fr.class.getName()).log(Level.SEVERE, null, ex);
 //        }
+        System.exit(0);
     }//GEN-LAST:event_btn_stopActionPerformed
 
     private void btn_starActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_starActionPerformed
         btn_stop.setEnabled(true);
-        servidor.startServer();
         btn_star.setEnabled(false);
+        servidor.startServer();
     }//GEN-LAST:event_btn_starActionPerformed
 
     public static void main(String args[]) {

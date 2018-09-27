@@ -20,7 +20,7 @@ import java.net.UnknownHostException;
  */
 public class Snowcast_listener {
 
-    public static void main(String[] args) throws SocketException, UnknownHostException, IOException {
+    public void starClienteUdp() throws SocketException, UnknownHostException, IOException {
         int portaUDP = 33333;
         System.out.println("Cliente UDP , porta " + portaUDP);
 
@@ -29,29 +29,32 @@ public class Snowcast_listener {
         try (DatagramSocket clientSocket = new DatagramSocket()) {
             String servidor = "127.0.0.1";
             int portaUDPServidor = 44444;
-            
+
             InetAddress ipServidor = InetAddress.getByName(servidor);
-            
+
             byte[] dadosEnviados = new byte[1024];
             byte[] dadosRecebidos = new byte[1024];
-            
+
             System.out.println("Digite o texto a ser enviado ao servidor: ");
             String sentence = inFromUser.readLine();
             dadosEnviados = sentence.getBytes();
-            DatagramPacket enviarPacote = new DatagramPacket(dadosEnviados,dadosEnviados.length, ipServidor, portaUDPServidor);
-            
+            DatagramPacket enviarPacote = new DatagramPacket(dadosEnviados, dadosEnviados.length, ipServidor, portaUDPServidor);
+
             System.out.println("Enviando pacote UDP para " + servidor + ":" + portaUDPServidor);
             clientSocket.send(enviarPacote);
-            
-            DatagramPacket receivePacket = new DatagramPacket(dadosRecebidos,dadosRecebidos.length);
-            
+
+            DatagramPacket receivePacket = new DatagramPacket(dadosRecebidos, dadosRecebidos.length);
+
             clientSocket.receive(receivePacket);
             System.out.println("Pacote UDP recebido...");
-            
+
             String modifiedSentence = new String(receivePacket.getData());
-            
+
             System.out.println("Texto recebido do servidor:" + modifiedSentence);
         }
         System.out.println("Socket cliente fechado!");
     }
+
 }
+
+
