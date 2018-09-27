@@ -27,20 +27,21 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
         initComponents();
     }
 
-    public void enviaSetSTation() throws IOException {
-        Socket socketClienteTCP;
-        socketClienteTCP = new Socket("127.0.0.1",55555);
-        ObjectOutputStream output;
-        output = new ObjectOutputStream(socketClienteTCP.getOutputStream());
-        //tocar música
-        //escolhe o id ou nome da estação que o cliente selecionou  
-        //envia via protocolo SetStation o número da estação
-        //2. SetStation: uint8_t commandType = 1; uint16_t stationNumber;
-        protocoloSetStation.setCommandType('1');
-        protocoloSetStation.setStationNumber(jTableEstacoes.getSelectedRow());
-        //System.out.println("Número da estação : " + protocoloSetStation.getStationNumber());
-        output.writeObject(protocoloSetStation);
-    }
+//    public void enviaSetSTation() throws IOException {
+//        Socket socketClienteTCP;
+//        socketClienteTCP = new Socket("127.0.0.1",55555);
+//        ObjectOutputStream output;
+//        output = new ObjectOutputStream(socketClienteTCP.getOutputStream());
+//        //tocar música
+//        //escolhe o id ou nome da estação que o cliente selecionou  
+//        //envia via protocolo SetStation o número da estação
+//        //2. SetStation: uint8_t commandType = 1; uint16_t stationNumber;
+//        protocoloSetStation.setCommandType('1');
+//        protocoloSetStation.setStationNumber(jTableEstacoes.getSelectedRow());
+//        //System.out.println("Número da estação : " + protocoloSetStation.getStationNumber());
+//        output.writeObject(protocoloSetStation);
+//    }
+    
     //Método para exibir na grade 
     public void RetornoDados(Object obj) {
         this.estacoes = (Map<String, String>) obj;
@@ -76,6 +77,8 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, jTableEstacoes.getValueAt(i, 0).toString());
                 }
             }
+            protocoloSetStation.setStationNumber(jTableEstacoes.getSelectedRow());
+            clienteTCP.getStationNumber(protocoloSetStation.getStationNumber());
         }
     }
 
