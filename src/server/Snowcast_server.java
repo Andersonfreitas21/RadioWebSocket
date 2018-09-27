@@ -37,7 +37,7 @@ public class Snowcast_server {
 
     private ServerSocket serverSocket;
     private final int portServer = 55555;
-    private final int numEstacoes = 5;
+    private final int numEstacoes = 4;
     Snowcast_server server;
     Snowcast_server_fr view;
 
@@ -90,7 +90,7 @@ public class Snowcast_server {
                 protocoloWelcome.setNumStation(numEstacoes);
                 //Enviando o protocolo Welcome ao cliente
                 output.writeObject(protocoloWelcome);
-                
+
                 //Cria o protocolo Announce para enviar as estações
                 // 2. Announce: uint8_t replyType = 1; uint8_t songnameSize;    char songname[songnameSize];
                 Mensagem protocoloAnnounce = new Mensagem();
@@ -101,18 +101,26 @@ public class Snowcast_server {
                 estacoes.put("2 - Rádio Progresso", "Breaking The Girl");
                 estacoes.put("3 - Som Zoom Site", "Terra sem cep");
                 estacoes.put("4 - SomZoomSat", "Californication");
-                
+
                 protocoloAnnounce.setEstacoes(estacoes);
-                
+
                 //Enviando o protocolo Welcome ao cliente
                 output.writeObject(protocoloAnnounce);
-                output.flush();          
+                output.flush();
 
                 //Recebendo o número da estação selecionada pelo cliente
-                //int numStation = (Integer) input.readObject();
-                //System.out.println("Estação selecionada pelo cliente : " + numStation);
+                // 2. SetStation: uint8_t commandType = 1; uint16_t stationNumber;
+                Mensagem protocoloSetStation = (Mensagem) input.readObject();
 
-                //Enviando arquivo da canção para cliente UDP
+                if (protocoloSetStation.getCommandType() == '1') {
+                    System.out.println("Estação selecionada pelo cliente : " + protocoloSetStation.getNumStation());
+
+                    //Enviando arquivo da canção para cliente UDP
+                    //Se conectar com o cliente UDP com a estação escolhida
+                } else {
+                    System.out.println("Erro no protocolo SetStation ");
+                }
+
             } else {
                 System.out.println("Erro no comando HELLO");
             }
@@ -195,4 +203,6 @@ public class Snowcast_server {
 //        }
 //
 //    }
+    
+    
 }
