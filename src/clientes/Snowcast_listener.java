@@ -22,37 +22,36 @@ public class Snowcast_listener {
 
     public static void main(String[] args) throws SocketException, UnknownHostException, IOException {
         int portaUDP = 33333;
-        System.out.println("Cliente UDP , porta" + portaUDP);
+        System.out.println("Cliente UDP , porta " + portaUDP);
 
         BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
 
-        DatagramSocket clientSocket = new DatagramSocket();
-
-        String servidor = "localhost";
-        int porta = 44444;
-
-        InetAddress IPAddress = InetAddress.getByName(servidor);
-
-        byte[] sendData = new byte[1024];
-        byte[] receiveData = new byte[1024];
-
-        System.out.println("Digite o texto a ser enviado ao servidor: ");
-        String sentence = inFromUser.readLine();
-        sendData = sentence.getBytes();
-        DatagramPacket sendPacket = new DatagramPacket(sendData,sendData.length, IPAddress, porta);
-
-        System.out.println("Enviando pacote UDP para " + servidor + ":" + porta);
-        clientSocket.send(sendPacket);
-
-        DatagramPacket receivePacket = new DatagramPacket(receiveData,receiveData.length);
-
-        clientSocket.receive(receivePacket);
-        System.out.println("Pacote UDP recebido...");
-
-        String modifiedSentence = new String(receivePacket.getData());
-
-        System.out.println("Texto recebido do servidor:" + modifiedSentence);
-        clientSocket.close();
+        try (DatagramSocket clientSocket = new DatagramSocket()) {
+            String servidor = "127.0.0.1";
+            int portaUDPServidor = 44444;
+            
+            InetAddress ipServidor = InetAddress.getByName(servidor);
+            
+            byte[] dadosEnviados = new byte[1024];
+            byte[] dadosRecebidos = new byte[1024];
+            
+            System.out.println("Digite o texto a ser enviado ao servidor: ");
+            String sentence = inFromUser.readLine();
+            dadosEnviados = sentence.getBytes();
+            DatagramPacket enviarPacote = new DatagramPacket(dadosEnviados,dadosEnviados.length, ipServidor, portaUDPServidor);
+            
+            System.out.println("Enviando pacote UDP para " + servidor + ":" + portaUDPServidor);
+            clientSocket.send(enviarPacote);
+            
+            DatagramPacket receivePacket = new DatagramPacket(dadosRecebidos,dadosRecebidos.length);
+            
+            clientSocket.receive(receivePacket);
+            System.out.println("Pacote UDP recebido...");
+            
+            String modifiedSentence = new String(receivePacket.getData());
+            
+            System.out.println("Texto recebido do servidor:" + modifiedSentence);
+        }
         System.out.println("Socket cliente fechado!");
     }
 }
