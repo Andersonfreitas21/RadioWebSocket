@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import util.Mensagem;
 import view.Snowcast_control_fr;
@@ -14,13 +16,26 @@ import view.Snowcast_control_fr;
  */
 public class Snowcast_control {
 
+    Mensagem protocoloHello;
+    Mensagem protocoloWelcome;
+    Mensagem protocoloAnnounce;
+    Mensagem protocoloSetStation;
+    Mensagem InvalidCommand;
+    
     Snowcast_control_fr view;
     int stationNumber;
 
+    //Função para enviar a estação selecionada pelo cliente
     public void getStationNumber(int stationNumber) {
         this.stationNumber = stationNumber;
+        try {
+            conexaoTCP(view);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Snowcast_control.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
+    //Método que inicia um socket e se comunica com o servidor
     public void conexaoTCP(Snowcast_control_fr view) throws ClassNotFoundException {
         try {
 
@@ -30,7 +45,7 @@ public class Snowcast_control {
             int portServer = 55555;
             int portUDPCliente = 66666;
 
-            //Cria um socket para estabelecer conexãqo com o servidor
+            //Cria um socket para estabelecer conexão com o servidor
             Socket socketClienteTCP = new Socket(server, portServer);
 
             //Criação dos streams de entrada e saída
@@ -38,15 +53,17 @@ public class Snowcast_control {
             ObjectInputStream input = new ObjectInputStream(socketClienteTCP.getInputStream());
 
             //###### Comandos do cliente para o servidor ######
-            // 1. Hello:      uint8_t commandType= 0;  uint16_t udpPort;
+            // 1. Hello:      uint8_t commandType = 0;  uint16_t udpPort;
             // 2. SetStation: uint8_t commandType = 1; uint16_t stationNumber;
             //###### Respostas do servidor para o cliente ######
             // 1. Welcome:        uint8_t replyType = 0; uint16_t numStations;
             // 2. Announce:       uint8_t replyType = 1; uint8_t songnameSize;    char songname[songnameSize];
             // 3. InvalidCommand: uint8_t replyType = 2; uint8_t replyStringSize; char replyString[replyStringSize];
+            
             //Instanciando o protocolo HELLO
             // 1. Hello: uint8_t commandType= 0;  uint16_t udpPort;
-            Mensagem protocoloHello = new Mensagem();
+            //O comando Hello é enviado quando o cliente conecta-se ao servidor. Ele diz ao servidor para qual porta UDP devem ser enviados os dados da canção.
+            protocoloHello = new Mensagem();
             protocoloHello.setCommandType('0');
             protocoloHello.setUpdPort(portUDPCliente);
 
@@ -57,7 +74,7 @@ public class Snowcast_control {
 
             //Recebendo a resposta do servidor
             // 1. Welcome: uint8_t replyType = 0; uint16_t numStations;
-            Mensagem protocoloWelcome = (Mensagem) input.readObject();
+            protocoloWelcome = (Mensagem) input.readObject();
 
             if (protocoloWelcome.getReplayType() == '0') {
                 //Protocolo de comunicação OK
@@ -71,16 +88,17 @@ public class Snowcast_control {
 
             //Recebendo as estações <estação><nomeCanção>
             //2. Announce: uint8_t replyType = 1; uint8_t songnameSize; char songname[songnameSize];
-            Mensagem protocoloAnnounce = (Mensagem) input.readObject();
+            protocoloAnnounce = (Mensagem) input.readObject();
 
             if (protocoloAnnounce.getReplayType() == '1') {
                 //Listando as estações na grid Jtable1
                 view.RetornoDados(protocoloAnnounce.getEstacoes());
 
-            // 2. SetStation: uint8_t commandType = 1; uint16_t stationNumber;
-                Mensagem protocoloSetStation = new Mensagem();
+                // 2. SetStation: uint8_t commandType = 1; uint16_t stationNumber;
+                protocoloSetStation = new Mensagem();
                 protocoloSetStation.setCommandType('1');
                 protocoloSetStation.setNumStation(stationNumber);
+                
                 output.writeObject(protocoloSetStation);
                 output.flush();
 

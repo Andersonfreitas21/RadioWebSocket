@@ -26,6 +26,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.JOptionPane;
 import util.Mensagem;
 import view.Snowcast_server_fr;
 
@@ -38,6 +39,13 @@ public class Snowcast_server {
     private ServerSocket serverSocket;
     private final int portServer = 55555;
     private final int numEstacoes = 4;
+
+    Mensagem protocoloHello;
+    Mensagem protocoloWelcome;
+    Mensagem protocoloAnnounce;
+    Mensagem protocoloSetStation;
+    Mensagem InvalidCommand;
+
     Snowcast_server server;
     Snowcast_server_fr view;
 
@@ -75,8 +83,8 @@ public class Snowcast_server {
 
             //Cria um Objeto tipo Mensagem para se comunicar com o servidor
             //Recebendo o comando Hello do cliente 
-            //Lê um objeto ObjectInputStream, porta UDP Cliente
-            Mensagem protocoloHello = (Mensagem) input.readObject();
+            //Lê um objeto ObjectInputStream, com a porta UDP Cliente
+            protocoloHello = (Mensagem) input.readObject();
 
             //Verificando o comando HELLO
             if (protocoloHello.getCommandType() == '0') {
@@ -85,7 +93,7 @@ public class Snowcast_server {
 
                 //Cria o protocolo Welcome para se comunicar com o cliente
                 // 1. Welcome: uint8_t replyType = 0; uint16_t numStations;
-                Mensagem protocoloWelcome = new Mensagem();
+                protocoloWelcome = new Mensagem();
                 protocoloWelcome.setReplayType('0');
                 protocoloWelcome.setNumStation(numEstacoes);
                 //Enviando o protocolo Welcome ao cliente
@@ -93,14 +101,14 @@ public class Snowcast_server {
 
                 //Cria o protocolo Announce para enviar as estações
                 // 2. Announce: uint8_t replyType = 1; uint8_t songnameSize;    char songname[songnameSize];
-                Mensagem protocoloAnnounce = new Mensagem();
+                protocoloAnnounce = new Mensagem();
                 protocoloAnnounce.setReplayType('1');
                 //Criando uma interface Map com chave e valor, listando as estações
                 Map<String, String> estacoes = new HashMap<>();
-                estacoes.put("1 - FM Araibu", "The Zephyr Song");
-                estacoes.put("2 - Rádio Progresso", "Breaking The Girl");
-                estacoes.put("3 - Som Zoom Site", "Terra sem cep");
-                estacoes.put("4 - SomZoomSat", "Californication");
+                estacoes.put("0 - FM Araibu", "The Zephyr Song");
+                estacoes.put("1 - Rádio Progresso", "Breaking The Girl");
+                estacoes.put("2 - RussasNet", "Otherside");
+                estacoes.put("3 - SomZoomSat", "Californication");
 
                 protocoloAnnounce.setEstacoes(estacoes);
 
@@ -110,7 +118,7 @@ public class Snowcast_server {
 
                 //Recebendo o número da estação selecionada pelo cliente
                 // 2. SetStation: uint8_t commandType = 1; uint16_t stationNumber;
-                Mensagem protocoloSetStation = (Mensagem) input.readObject();
+                protocoloSetStation = (Mensagem) input.readObject();
 
                 if (protocoloSetStation.getCommandType() == '1') {
                     System.out.println("Estação selecionada pelo cliente : " + protocoloSetStation.getNumStation());
@@ -118,29 +126,29 @@ public class Snowcast_server {
                     //Enviando arquivo da canção para cliente UDP
                     //Se conectar com o cliente UDP com a estação escolhida
                 } else {
-                    System.out.println("Erro no protocolo SetStation ");
+                    JOptionPane.showMessageDialog(null, "Erro no protocolo SetStation ");
                 }
 
             } else {
-                System.out.println("Erro no comando HELLO");
+                JOptionPane.showMessageDialog(null, "Erro : Cliente não conseguiu se conectar.");
+                fechaConexao(socket);
             }
 
             input.close();
             output.close();
 
-        } catch (Exception ex) {
+        } catch (IOException | ClassNotFoundException ex) {
             //Tratando as falhas
-            System.out.println("Erro : " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, ex.getMessage());
         } finally {
             //Fechando conexão
-            fechaConexao(socket);
+//            fechaConexao(socket);
         }
     }
 
     public void startServer() {
         try {
             //Instacia um objeto tipo Snowcast_server
-            Snowcast_server server;
             server = new Snowcast_server();
             System.out.println("Aguardando conexão...");
 
@@ -154,12 +162,12 @@ public class Snowcast_server {
                 //Tratando conexão
                 server.trataConexao(socket);
 
-                System.out.println("Aguardando clientes...");
+                System.out.println("Aguardando um novo cliente...");
             }
 
         } catch (Exception ex) {
             //Tratando erros na comunicação Socket
-            System.out.println("Erro de comunicação do Socket: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro de comunicação do Socket: " + ex.getMessage());
         }
     }
 
@@ -173,7 +181,6 @@ public class Snowcast_server {
 //
 //        this.server.fechaConexao(socket);
 //    }
-
 //    public static void main(String[] agrs) throws IOException {
 //        try {
 //            //Instacia um objeto tipo Snowcast_server
@@ -203,6 +210,4 @@ public class Snowcast_server {
 //        }
 //
 //    }
-    
-    
 }

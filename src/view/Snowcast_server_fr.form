@@ -130,7 +130,7 @@
             <Property name="text" type="java.lang.String" value="Iniciar Servirdor"/>
           </Properties>
           <Events>
-            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btn_starMouseClicked"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_starActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btn_stop">
@@ -142,6 +142,7 @@
               <Image iconType="3" name="/icons/icons8_Stop_Property_36px.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Parar Servidor"/>
+            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_stopActionPerformed"/>

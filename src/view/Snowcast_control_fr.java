@@ -21,7 +21,7 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
     Map<String, String> estacoes = new HashMap<>();
     private DefaultTableModel modelo;
     Mensagem protocoloSetStation = new Mensagem();
-    Snowcast_control clienteTCP;
+    Snowcast_control clienteTCP = new Snowcast_control();
 
     public Snowcast_control_fr() {
         initComponents();
@@ -41,7 +41,6 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
 //        //System.out.println("Número da estação : " + protocoloSetStation.getStationNumber());
 //        output.writeObject(protocoloSetStation);
 //    }
-    
     //Método para exibir na grade 
     public void RetornoDados(Object obj) {
         this.estacoes = (Map<String, String>) obj;
@@ -64,22 +63,48 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
 //            }
 //        }
 //    }
-
     public void enviaEstacao(String estacao) {
         if (txtEstacao.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Command Invalid - Selecione uma estação.");
-        } else if(Integer.parseInt(txtEstacao.getText()) > jTableEstacoes.getRowCount()) {
+        } else if (Integer.parseInt(txtEstacao.getText()) > jTableEstacoes.getRowCount()) {
             JOptionPane.showMessageDialog(null, "Invalido");
-        } 
-        else {
-            for (int i = 0; i < modelo.getRowCount(); i++) {
-                if (modelo.getValueAt(i, 0).toString().contains(estacao)) {
-                    JOptionPane.showMessageDialog(null, jTableEstacoes.getValueAt(i, 0).toString());
-                }
+        } else {
+//            for (int i = 0; i < modelo.getRowCount(); i++) {
+//                if (modelo.getValueAt(i, 0).toString().contains(estacao)) {
+//                    JOptionPane.showMessageDialog(null, jTableEstacoes.getValueAt(i, 0).toString() + " selecionada.");
+//                }
+//            }
+            switch (Integer.parseInt(txtEstacao.getText())) {
+                case 0:
+                    protocoloSetStation.setStationNumber(0);
+                    System.out.println("jTableEstacoes.getSelectedRow() " + protocoloSetStation.getStationNumber());
+                    clienteTCP.getStationNumber(protocoloSetStation.getStationNumber());
+                    break;
+                case 1:
+                    protocoloSetStation.setStationNumber(1);
+                    System.out.println("jTableEstacoes.getSelectedRow() " + protocoloSetStation.getStationNumber());
+                    clienteTCP.getStationNumber(protocoloSetStation.getStationNumber());
+                    break;
+                case 2:
+                    protocoloSetStation.setStationNumber(2);
+                    System.out.println("jTableEstacoes.getSelectedRow() " + protocoloSetStation.getStationNumber());
+                    clienteTCP.getStationNumber(protocoloSetStation.getStationNumber());
+                    break;
+                case 3:
+                    protocoloSetStation.setStationNumber(3);
+                    System.out.println("jTableEstacoes.getSelectedRow() " + protocoloSetStation.getStationNumber());
+                    clienteTCP.getStationNumber(protocoloSetStation.getStationNumber());
+                    break;
+                default:
+                    System.out.println("Comando inválido.");
             }
-            protocoloSetStation.setStationNumber(jTableEstacoes.getSelectedRow());
-            clienteTCP.getStationNumber(protocoloSetStation.getStationNumber());
+//            if (txtEstacao.getText().equals("0")) {
+//                JOptionPane.showMessageDialog(null, "DEU CERTO");
+//            }
         }
+//        if (txtEstacao.getText().equals("0")) {
+//            JOptionPane.showMessageDialog(null, "DEU CERTO");
+//        }
     }
 
     @SuppressWarnings("unchecked")
@@ -135,6 +160,9 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
         txtEstacao.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtEstacaoKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtEstacaoKeyTyped(evt);
             }
         });
 
@@ -268,7 +296,6 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_listarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_listarActionPerformed
-        clienteTCP = new Snowcast_control();
         try {
             clienteTCP.conexaoTCP(this);
         } catch (ClassNotFoundException ex) {
@@ -293,19 +320,24 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_enviarActionPerformed
 
     private void txtEstacaoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEstacaoKeyReleased
-        if (txtEstacao.getText().equals("0")) {
-            JOptionPane.showMessageDialog(null, "DEU CERTO");
-        }
+//        if (txtEstacao.getText().equals("0")) {
+//            JOptionPane.showMessageDialog(null, "DEU CERTO");
+//        }
     }//GEN-LAST:event_txtEstacaoKeyReleased
 
-    public static void main(String args[]) {
+    private void txtEstacaoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEstacaoKeyTyped
+        String caracteres = "0987654321";
+        if (!caracteres.contains(evt.getKeyChar() + "")) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtEstacaoKeyTyped
 
+    public static void main(String args[]) {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
-
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {

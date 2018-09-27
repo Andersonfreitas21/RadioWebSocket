@@ -1,8 +1,5 @@
 package view;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import server.Snowcast_server;
 
 /**
@@ -63,15 +60,16 @@ public class Snowcast_server_fr extends javax.swing.JFrame {
         btn_star.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
         btn_star.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8_Play_Property_36px.png"))); // NOI18N
         btn_star.setText("Iniciar Servirdor");
-        btn_star.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btn_starMouseClicked(evt);
+        btn_star.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_starActionPerformed(evt);
             }
         });
 
         btn_stop.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
         btn_stop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8_Stop_Property_36px.png"))); // NOI18N
         btn_stop.setText("Parar Servidor");
+        btn_stop.setEnabled(false);
         btn_stop.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_stopActionPerformed(evt);
@@ -118,10 +116,6 @@ public class Snowcast_server_fr extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btn_starMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_starMouseClicked
-        servidor.startServer();
-    }//GEN-LAST:event_btn_starMouseClicked
-
     private void btn_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_stopActionPerformed
 //        try {
 //            servidor.stopServer();
@@ -129,6 +123,12 @@ public class Snowcast_server_fr extends javax.swing.JFrame {
 //            Logger.getLogger(Snowcast_server_fr.class.getName()).log(Level.SEVERE, null, ex);
 //        }
     }//GEN-LAST:event_btn_stopActionPerformed
+
+    private void btn_starActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_starActionPerformed
+        btn_stop.setEnabled(true);
+        servidor.startServer();
+        btn_star.setEnabled(false);
+    }//GEN-LAST:event_btn_starActionPerformed
 
     public static void main(String args[]) {
        
