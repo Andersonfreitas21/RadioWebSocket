@@ -72,31 +72,31 @@ public class Snowcast_server {
         this.stationNumber = stationNumber;
         int numConn = 1;
 
-        DatagramSocket serverSocket = new DatagramSocket(portTCPServer);
+        DatagramSocket serverSocket = new DatagramSocket(portUDPServer);
 
-        byte[] receiveData = new byte[1024];
-        byte[] sendData = new byte[1024];
+        byte[] dadosRecebidos = new byte[1024];
+        byte[] dadosEnviados = new byte[1024];
 
         while (true) {
 
-            DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+            DatagramPacket pacoteRecebido = new DatagramPacket(dadosRecebidos, dadosRecebidos.length);
             System.out.println("Esperando por datagrama UDP na porta " + portUDPServer);
-            serverSocket.receive(receivePacket);
+            serverSocket.receive(pacoteRecebido);
             System.out.print("Datagrama UDP [" + numConn + "] recebido...");
 
-            String sentence = new String(receivePacket.getData());
+            String sentence = new String(pacoteRecebido.getData());
             System.out.println(sentence);
 
-            InetAddress IPAddress = receivePacket.getAddress();
+            InetAddress IPAddress = pacoteRecebido.getAddress();
 
-            int port = receivePacket.getPort();
+            int port = pacoteRecebido.getPort();
 
             String capitalizedSentence = sentence.toUpperCase();
 
-            sendData = capitalizedSentence.getBytes();
+            dadosEnviados = capitalizedSentence.getBytes();
 
-            DatagramPacket sendPacket = new DatagramPacket(sendData,
-                    sendData.length, IPAddress, port);
+            DatagramPacket sendPacket = new DatagramPacket(dadosEnviados,
+                    dadosEnviados.length, IPAddress, port);
 
             System.out.print("Enviando " + capitalizedSentence + "...");
 
