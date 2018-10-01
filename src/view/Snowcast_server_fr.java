@@ -1,5 +1,9 @@
 package view;
 
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 import server.Snowcast_server;
 
 /**
@@ -9,7 +13,43 @@ import server.Snowcast_server;
 public class Snowcast_server_fr extends javax.swing.JFrame {
 
     Snowcast_server servidor = new Snowcast_server();
-    
+    private ObjectOutputStream output;
+    private ObjectInputStream input;
+
+    private ServerSocket server;
+    private Socket connection;
+
+//    public void iniciarServidor() {
+//        try {
+//            server = new ServerSocket(55555);
+//
+//            while (true) {
+//                System.out.println("Aguardando conexão!");
+//                connection = server.accept();
+//                System.out.println("Conexão recebida de :" + connection.getInetAddress().getHostName());
+//
+//                output = new ObjectOutputStream(connection.getOutputStream());
+//                output.flush();
+//
+//                output.writeObject("Conexão estabelecida ");
+//                output.flush();
+//
+//                input = new ObjectInputStream(connection.getInputStream());
+//
+//            }
+//        } catch (Exception e) {
+//        }
+//    }
+
+    public void fechaConexao() {
+        try {
+            output.close();
+            input.close();
+            connection.close();
+        } catch (Exception e) {
+        }
+    }
+
     public Snowcast_server_fr() {
         initComponents();
     }
@@ -25,7 +65,7 @@ public class Snowcast_server_fr extends javax.swing.JFrame {
         btn_star = new javax.swing.JButton();
         btn_stop = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -116,32 +156,36 @@ public class Snowcast_server_fr extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_stopActionPerformed
-        System.exit(0);
+        java.awt.EventQueue.invokeLater(() -> {
+            fechaConexao();
+        });
     }//GEN-LAST:event_btn_stopActionPerformed
 
     private void btn_starActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_starActionPerformed
-        btn_stop.setEnabled(true);
-        btn_star.setEnabled(false);
-        servidor.startServer();
+        java.awt.EventQueue.invokeLater(() -> {
+            btn_stop.setEnabled(true);
+            btn_star.setEnabled(false);
+            servidor.startServer();
+        });
     }//GEN-LAST:event_btn_starActionPerformed
 
-//    public static void main(String args[]) {
-//       
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Windows".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(Snowcast_server_fr.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        
-//        java.awt.EventQueue.invokeLater(() -> {
-//            new Snowcast_server_fr().setVisible(true);
-//        });
-//    }
+    public static void main(String args[]) {
+
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Windows".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Snowcast_server_fr.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+
+        java.awt.EventQueue.invokeLater(() -> {
+            new Snowcast_server_fr().setVisible(true);
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_star;

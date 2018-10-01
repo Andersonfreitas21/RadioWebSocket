@@ -148,8 +148,11 @@ public class Snowcast_control {
                 //Protocolo de comunicação OK
                 //Recebendo o número de estações 
                 int numEstacoes = protocoloWelcome.getNumStation();
-                System.out.println("Quantidade de estações disponíveis  : " + numEstacoes);
+                System.out.println("1. Welcome: uint8_t replyType = 0; uint16_t numStations : " + numEstacoes);
 
+                //Listando as estações na grid Jtable1
+                view.RetornoDados(protocoloWelcome.getEstacoes());
+//
 //                protocoloSetStation = new Mensagem();
 //                // 2. SetStation: uint8_t commandType = 1; uint16_t stationNumber;
 //                protocoloSetStation.setCommandType('1');
@@ -160,19 +163,7 @@ public class Snowcast_control {
                 JOptionPane.showMessageDialog(null, "Erro protocolo Welcome.");
             }
 
-
-            //Recebendo as estações <estação><nomeCanção>
-            //2. Announce: uint8_t replyType = 1; uint8_t songnameSize; char songname[songnameSize];
-            protocoloAnnounce = (Mensagem) input.readObject();
-
-            if (protocoloAnnounce.getReplayType() == '1') {
-                //Listando as estações na grid Jtable1
-                view.RetornoDados(protocoloAnnounce.getEstacoes());
-            } else {
-                JOptionPane.showMessageDialog(null, "Erro protocolo Announce.");
-                //System.out.println("Erro protocolo Announce: " + protocoloAnnounce.getReplayType());
-            }
-
+            
             //Fechar os streams de entrada e saída
             input.close();
             output.close();
@@ -192,7 +183,7 @@ public class Snowcast_control {
 
             //Criação dos streams de entrada e saída
             ObjectOutputStream output = new ObjectOutputStream(socketClienteTCP.getOutputStream());
-            //ObjectInputStream input = new ObjectInputStream(socketClienteTCP.getInputStream());
+            ObjectInputStream input = new ObjectInputStream(socketClienteTCP.getInputStream());
 
             protocoloSetStation = new Mensagem();
             // 2. SetStation: uint8_t commandType = 1; uint16_t stationNumber;
@@ -200,9 +191,19 @@ public class Snowcast_control {
             protocoloSetStation.setNumStation(stationNumber);
             output.writeObject(protocoloSetStation);
             output.flush();
+            
+            //2. Announce: uint8_t replyType = 1; uint8_t songnameSize; char songname[songnameSize];
+            protocoloAnnounce = (Mensagem) input.readObject();
+
+            if (protocoloAnnounce.getReplayType() == '1') {
+                //Listando as estações na grid Jtable1
+                JOptionPane.showMessageDialog(null, "Comando SetStation enviado.");
+            } else {
+                JOptionPane.showMessageDialog(null, "Erro protocolo Announce.");
+            }
 
             //Fechar os streams de entrada e saída
-            //input.close();
+            input.close();
             output.close();
 
         } catch (IOException ex) {

@@ -104,7 +104,7 @@ public class Snowcast_server {
             if (protocoloHello.getCommandType() == '0') {
                 // 1. Hello: uint8_t commandType= 0;  uint16_t udpPort;
                 portUDPCliente = protocoloHello.getUpdPort();
-                System.out.println("Cliente recebido , porta UDP : " + portUDPCliente);
+                System.out.println("1. Hello: uint8_t commandType= 0;  uint16_t udpPort; : " + portUDPCliente);
 
             } else {
                 JOptionPane.showMessageDialog(null, "Erro : Cliente não conseguiu se conectar.");
@@ -116,25 +116,15 @@ public class Snowcast_server {
             protocoloWelcome = new Mensagem();
             protocoloWelcome.setReplayType('0');
             protocoloWelcome.setNumStation(numEstacoes);
-            //Enviando o protocolo Welcome ao cliente
-            output.writeObject(protocoloWelcome);
-            output.flush();
-
-            //Cria o protocolo Announce para enviar as estações
-            // 2. Announce: uint8_t replyType = 1; uint8_t songnameSize;    char songname[songnameSize];
-            protocoloAnnounce = new Mensagem();
-            protocoloAnnounce.setReplayType('1');
-            //Criando uma interface Map com chave e valor, listando as estações
             Map<Integer, String> estacoesMAP = new HashMap<>();
             estacoesMAP.put(0, "The Zephyr Song");
             estacoesMAP.put(1, "Breaking The Girl");
             estacoesMAP.put(2, "Otherside");
             estacoesMAP.put(3, "Californication");
 
-            protocoloAnnounce.setEstacoes(estacoesMAP);
-
+            protocoloWelcome.setEstacoes(estacoesMAP);
             //Enviando o protocolo Welcome ao cliente
-            output.writeObject(protocoloAnnounce);
+            output.writeObject(protocoloWelcome);
             output.flush();
 
             //Recebendo o número da estação selecionada pelo cliente
@@ -144,14 +134,25 @@ public class Snowcast_server {
 
             if (protocoloSetStation.getCommandType() == '1') {
                 if (protocoloSetStation.getStationNumber() == 0) {
-                    System.out.println("Estação selecionada pelo cliente : " + protocoloSetStation.getStationNumber());
+                    System.out.println("2. SetStation: uint8_t commandType = 1; uint16_t stationNumber : " + protocoloSetStation.getStationNumber());
+
+                    //Cria o protocolo Announce
+                    // 2. Announce: uint8_t replyType = 1; uint8_t songnameSize;    char songname[songnameSize];
+                    protocoloAnnounce = new Mensagem();
+                    protocoloAnnounce.setReplayType('1');
+
+                    //Enviando o protocolo Welcome ao cliente
+                    output.writeObject(protocoloAnnounce);
+                    output.flush();
+
                 } else {
                     System.out.println("Paciência deve ter, meu jovem Padawan.");
                 }
 
                 //Enviando arquivo da canção para cliente UDP
                 //Se conectar com o cliente UDP com a estação escolhida
-                //udpServer(portUDPCliente, protocoloSetStation.getNumStation());
+                udpServer(portUDPCliente, protocoloSetStation.getNumStation());
+                
             } else {
                 JOptionPane.showMessageDialog(null, "Erro no protocolo SetStation ");
             }
@@ -161,8 +162,8 @@ public class Snowcast_server {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
 
-//        input.close();
-//        output.close();
+        input.close();
+        output.close();
     }
 
     public void startServer() {
@@ -192,47 +193,47 @@ public class Snowcast_server {
         }
     }
 
-//    private void udpServer(int portaUdpCliente, int stationNumber) throws SocketException, IOException, ClassNotFoundException {
-//
-//        //Porta UDP do cliente
-//        this.portUDP = portaUdpCliente;
-//        //Número da estação recebida pelo cliente
-//        this.stationNumber = stationNumber;
-//        int numConn = 1;
-//
-//        //Criando um servidor de Datagram
-//        DatagramSocket serverSocket = new DatagramSocket(portUDPServer);
-//        System.out.println("Servidor UDP criado na porta " + portUDPServer);
-//        //Instanciando um cliente UDP
-//        clienteUDP = new Snowcast_listener();
-//        clienteUDP.start();
-//
-//        musica = new Musica(1, "The Zephyr Song");
-//
-//        /* Escrita do Objeto*/
-//        FileOutputStream escrever = new FileOutputStream("C:/");
-//        ObjectOutputStream oos = new ObjectOutputStream(escrever);
-//        oos.writeObject(oos);
-//        oos.close();
-//
-//        /* Escrita do Objeto*/
-//        FileInputStream ler = new FileInputStream("C:/");
-//        ObjectInputStream ois = new ObjectInputStream(ler);
-//        Musica musica1 = (Musica) ois.readObject();
-//        ois.close();
-//
-//        while (true) {
-//
-//            //byte[] dadosRecebidos = new byte[1024];
-//            byte[] dadosEnviados = new byte[1024];
-//
-//            DatagramPacket sendPacket = new DatagramPacket(dadosEnviados, dadosEnviados.length);
-//
-//            serverSocket.send(sendPacket);
-//
-//            System.out.println("OK\n");
-//        }
-//    }
+    private void udpServer(int portaUdpCliente, int stationNumber) throws SocketException, IOException, ClassNotFoundException {
+
+        //Porta UDP do cliente
+        this.portUDP = portaUdpCliente;
+        //Número da estação recebida pelo cliente
+        this.stationNumber = stationNumber;
+        int numConn = 1;
+
+        //Criando um servidor de Datagram
+        DatagramSocket serverSocket = new DatagramSocket(portUDPServer);
+        System.out.println("Servidor UDP criado na porta " + portUDPServer);
+        //Instanciando um cliente UDP
+        clienteUDP = new Snowcast_listener();
+        clienteUDP.start();
+
+        musica = new Musica(1, "The Zephyr Song");
+
+        /* Escrita do Objeto*/
+        FileOutputStream escrever = new FileOutputStream("C:/");
+        ObjectOutputStream oos = new ObjectOutputStream(escrever);
+        oos.writeObject(oos);
+        oos.close();
+
+        /* Escrita do Objeto*/
+        FileInputStream ler = new FileInputStream("C:/");
+        ObjectInputStream ois = new ObjectInputStream(ler);
+        Musica musica1 = (Musica) ois.readObject();
+        ois.close();
+
+        while (true) {
+
+            //byte[] dadosRecebidos = new byte[1024];
+            byte[] dadosEnviados = new byte[1024];
+
+            DatagramPacket sendPacket = new DatagramPacket(dadosEnviados, dadosEnviados.length);
+
+            serverSocket.send(sendPacket);
+
+            System.out.println("OK\n");
+        }
+    }
     public static void main(String[] args) {
         new Snowcast_server().startServer();
     }

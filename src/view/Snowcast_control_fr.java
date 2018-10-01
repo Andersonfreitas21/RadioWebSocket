@@ -1,6 +1,11 @@
 package view;
 
 import clientes.Snowcast_control;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -14,13 +19,31 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Snowcast_control_fr extends javax.swing.JFrame {
 
+    private ObjectOutputStream output ;
+    private ObjectInputStream input;
+    
+    private String nomeServidor;
+
+    private Socket client;
+    
+    
     Snowcast_control clienteTCP;
     Map<Integer, String> estacoes = new HashMap<>();
     private DefaultTableModel modelo;
 
     public Snowcast_control_fr() {
         initComponents();
+        //connectToServer();
     }
+
+//    public void connectToServer() {
+//        try {
+//            client = new Socket(InetAddress.getByName(nomeServidor),55555);
+//            System.out.println("Conextado a " + client.getInetAddress().getHostName());
+//        } catch (Exception e) {
+//        }
+//
+//    }
 
     //Método para exibir na grade 
     public void RetornoDados(Object obj) {
@@ -33,7 +56,6 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
             modelo.addRow(new Object[]{key, value});
         });
     }
-
     public void enviaEstacao(String estacao) throws ClassNotFoundException {
         if (txtEstacao.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Command Invalid - Selecione uma estação.");
@@ -63,7 +85,6 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
             }
         }
     }
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -281,10 +302,10 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
     }//GEN-LAST:event_txtEstacaoKeyReleased
 
     private void txtEstacaoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEstacaoKeyTyped
-        String caracteres = "0987654321";
-        if (!caracteres.contains(evt.getKeyChar() + "")) {
-            evt.consume();
-        }
+//        String caracteres = "0987654321";
+//        if (!caracteres.contains(evt.getKeyChar() + "")) {
+//            evt.consume();
+//        }
     }//GEN-LAST:event_txtEstacaoKeyTyped
 
     public static void main(String args[]) {
