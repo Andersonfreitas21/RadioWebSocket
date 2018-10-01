@@ -119,6 +119,7 @@ public class Snowcast_server {
                 
                 //Cria o protocolo Announce para enviar as estações
                 // 2. Announce: uint8_t replyType = 1; uint8_t songnameSize;    char songname[songnameSize];
+                protocoloAnnounce = new Mensagem();
                 protocoloAnnounce.setReplayType('1');
                 //Criando uma interface Map com chave e valor, listando as estações
                 Map<Integer, String> estacoesMAP = new HashMap<>();

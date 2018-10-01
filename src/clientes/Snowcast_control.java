@@ -25,7 +25,7 @@ public class Snowcast_control {
     Snowcast_control clienteTCP;
     Snowcast_control_fr view;
     Socket socketClienteTCP;
-    //int stationNumber;
+    private int stationNumber;
 
 //    //Função para enviar a estação selecionada pelo cliente
 //    public void getStationNumber(int stationNumber) {
@@ -41,7 +41,7 @@ public class Snowcast_control {
         try {
 
             this.view = view;
-
+            
             String server = "127.0.0.1";
             int portServer = 55555;
             int portUDPCliente = 66666;
@@ -82,6 +82,13 @@ public class Snowcast_control {
                 int numEstacoes = protocoloWelcome.getNumStation();
                 System.out.println("Quantidade de estações disponíveis  : " + numEstacoes);
 
+                protocoloSetStation = new Mensagem();
+                // 2. SetStation: uint8_t commandType = 1; uint16_t stationNumber;
+                protocoloSetStation.setCommandType('1');
+                protocoloSetStation.setNumStation(0);
+                output.writeObject(protocoloSetStation);
+                output.flush();
+
             } else {
                 JOptionPane.showMessageDialog(null, "Erro protocolo Welcome.");
             }
@@ -93,14 +100,6 @@ public class Snowcast_control {
             if (protocoloAnnounce.getReplayType() == '1') {
                 //Listando as estações na grid Jtable1
                 view.RetornoDados(protocoloAnnounce.getEstacoes());
-
-                // 2. SetStation: uint8_t commandType = 1; uint16_t stationNumber;
-                protocoloSetStation.setCommandType('1');
-                protocoloSetStation.setNumStation(0);
-
-                output.writeObject(protocoloSetStation);
-                output.flush();
-
             } else {
                 JOptionPane.showMessageDialog(null, "Erro protocolo Announce.");
                 //System.out.println("Erro protocolo Announce: " + protocoloAnnounce.getReplayType());
