@@ -66,16 +66,14 @@ public class Snowcast_server {
     Musica musica;
 
     //Cria uma conexão ServerSocket
-    private void criaServerSocket(int portaServer) throws IOException {
-        serverSocket = new ServerSocket(portaServer);
-    }
-
+//    private void criaServerSocket(int portaServer) throws IOException {
+//        serverSocket = new ServerSocket(portaServer);
+//    }
     //Escuta uma conexão a ser feita neste soquete e a aceita. O método bloqueia até que uma conexão seja feita.
-    private Socket esperaConexão() throws IOException {
-        Socket socket = serverSocket.accept();
-        return socket;
-    }
-
+//    private Socket esperaConexão() throws IOException {
+//        Socket socket = serverSocket.accept();
+//        return socket;
+//    }
     //Fechando o socket
     private void fechaConexao(Socket socket) throws IOException {
         System.out.println("Fechando conexão ...");
@@ -84,6 +82,10 @@ public class Snowcast_server {
 
     //Cria uma conexão de entrada e saída entre cliente e servidor de acordo com o protocolo
     private void trataConexao(Socket socket) throws IOException {
+        //Retorna um fluxo de entrada para este soquete. Envia para o servidor
+        ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
+        ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+
         try {
             //###### Comandos do cliente para o servidor ######
             // 1. Hello:      uint8_t commandType= 0;  uint16_t udpPort;
@@ -92,10 +94,6 @@ public class Snowcast_server {
             // 1. Welcome:        uint8_t replyType = 0; uint16_t numStations;
             // 2. Announce:       uint8_t replyType = 1; uint8_t songnameSize;    char songname[songnameSize];
             // 3. InvalidCommand: uint8_t replyType = 2; uint8_t replyStringSize; char replyString[replyStringSize];
-
-            //Retorna um fluxo de entrada para este soquete. Envia para o servidor
-            ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
-            ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
 
             //Cria um Objeto tipo Mensagem para se comunicar com o servidor
             //Recebendo o comando Hello do cliente 
@@ -108,36 +106,36 @@ public class Snowcast_server {
                 portUDPCliente = protocoloHello.getUpdPort();
                 System.out.println("Cliente recebido , porta UDP : " + portUDPCliente);
 
-                //Cria o protocolo Welcome para se comunicar com o cliente
-                // 1. Welcome: uint8_t replyType = 0; uint16_t numStations;
-                protocoloWelcome = new Mensagem();
-                protocoloWelcome.setReplayType('0');
-                protocoloWelcome.setNumStation(numEstacoes);
-                //Enviando o protocolo Welcome ao cliente
-                output.writeObject(protocoloWelcome);
-                output.flush();
-                
-                //Cria o protocolo Announce para enviar as estações
-                // 2. Announce: uint8_t replyType = 1; uint8_t songnameSize;    char songname[songnameSize];
-                protocoloAnnounce = new Mensagem();
-                protocoloAnnounce.setReplayType('1');
-                //Criando uma interface Map com chave e valor, listando as estações
-                Map<Integer, String> estacoesMAP = new HashMap<>();
-                estacoesMAP.put(0, "The Zephyr Song");
-                estacoesMAP.put(1, "Breaking The Girl");
-                estacoesMAP.put(2, "Otherside");
-                estacoesMAP.put(3, "Californication");
-
-                protocoloAnnounce.setEstacoes(estacoesMAP);
-
-                //Enviando o protocolo Welcome ao cliente
-                output.writeObject(protocoloAnnounce);
-                output.flush();
-
             } else {
                 JOptionPane.showMessageDialog(null, "Erro : Cliente não conseguiu se conectar.");
                 fechaConexao(socket);
             }
+
+            //Cria o protocolo Welcome para se comunicar com o cliente
+            // 1. Welcome: uint8_t replyType = 0; uint16_t numStations;
+            protocoloWelcome = new Mensagem();
+            protocoloWelcome.setReplayType('0');
+            protocoloWelcome.setNumStation(numEstacoes);
+            //Enviando o protocolo Welcome ao cliente
+            output.writeObject(protocoloWelcome);
+            output.flush();
+
+            //Cria o protocolo Announce para enviar as estações
+            // 2. Announce: uint8_t replyType = 1; uint8_t songnameSize;    char songname[songnameSize];
+            protocoloAnnounce = new Mensagem();
+            protocoloAnnounce.setReplayType('1');
+            //Criando uma interface Map com chave e valor, listando as estações
+            Map<Integer, String> estacoesMAP = new HashMap<>();
+            estacoesMAP.put(0, "The Zephyr Song");
+            estacoesMAP.put(1, "Breaking The Girl");
+            estacoesMAP.put(2, "Otherside");
+            estacoesMAP.put(3, "Californication");
+
+            protocoloAnnounce.setEstacoes(estacoesMAP);
+
+            //Enviando o protocolo Welcome ao cliente
+            output.writeObject(protocoloAnnounce);
+            output.flush();
 
             //Recebendo o número da estação selecionada pelo cliente
             // 2. SetStation: uint8_t commandType = 1; uint16_t stationNumber;
@@ -145,10 +143,10 @@ public class Snowcast_server {
             protocoloSetStation = (Mensagem) input.readObject();
 
             if (protocoloSetStation.getCommandType() == '1') {
-                if (protocoloSetStation.getNumStation() != 0) {
-                    System.out.println("Estação selecionada pelo cliente : " + protocoloSetStation.getNumStation());
+                if (protocoloSetStation.getStationNumber() == 0) {
+                    System.out.println("Estação selecionada pelo cliente : " + protocoloSetStation.getStationNumber());
                 } else {
-                    System.out.println("Paciência você deve ter meu jovem Padawan.");
+                    System.out.println("Paciência deve ter, meu jovem Padawan.");
                 }
 
                 //Enviando arquivo da canção para cliente UDP
@@ -158,30 +156,32 @@ public class Snowcast_server {
                 JOptionPane.showMessageDialog(null, "Erro no protocolo SetStation ");
             }
 
-            input.close();
-            output.close();
-
         } catch (IOException | ClassNotFoundException ex) {
             //Tratando as falhas
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
+
+//        input.close();
+//        output.close();
     }
 
     public void startServer() {
         try {
             //Instacia um objeto tipo Snowcast_server
-            Snowcast_server server = new Snowcast_server();
+            //Snowcast_server server = new Snowcast_server();
             System.out.println("Aguardando conexão...");
 
             //Criando um socket de conexão
-            server.criaServerSocket(portTCPServer);
+            //server.criaServerSocket(portTCPServer);
+            serverSocket = new ServerSocket(portTCPServer);
 
             while (true) {
                 //Espera a solicitação de uma conexão do cliente
-                Socket socket = server.esperaConexão();
+                //Socket socket = server.esperaConexão();
+                Socket socket = serverSocket.accept();
 
                 //Tratando conexão
-                server.trataConexao(socket);
+                trataConexao(socket);
 
                 System.out.println("Aguardando um novo cliente...");
             }
