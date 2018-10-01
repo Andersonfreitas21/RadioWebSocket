@@ -27,20 +27,21 @@ public class Snowcast_control {
     Socket socketClienteTCP;
     private int stationNumber;
 
-//    //Função para enviar a estação selecionada pelo cliente
-//    public void getStationNumber(int stationNumber) {
-//        this.stationNumber = stationNumber;
-////        try {
-////            conexaoTCP(view);
-////        } catch (ClassNotFoundException ex) {
-////            Logger.getLogger(Snowcast_control.class.getName()).log(Level.SEVERE, null, ex);
-////        }
-//    }
+    //Função para enviar a estação selecionada pelo cliente
+    public void getStationNumber(int stationNumber) {
+        this.stationNumber = stationNumber;
+        try {
+            conexaoTCP(view);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Snowcast_control.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     //Método que inicia um socket e se comunica com o servidor
     public void conexaoTCP(Snowcast_control_fr view) throws ClassNotFoundException {
         try {
 
             this.view = view;
+            this.stationNumber = stationNumber;
             
             String server = "127.0.0.1";
             int portServer = 55555;
@@ -85,7 +86,7 @@ public class Snowcast_control {
                 protocoloSetStation = new Mensagem();
                 // 2. SetStation: uint8_t commandType = 1; uint16_t stationNumber;
                 protocoloSetStation.setCommandType('1');
-                protocoloSetStation.setNumStation(0);
+                protocoloSetStation.setNumStation(stationNumber);
                 output.writeObject(protocoloSetStation);
                 output.flush();
 

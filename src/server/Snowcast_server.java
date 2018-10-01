@@ -141,6 +141,7 @@ public class Snowcast_server {
 
             //Recebendo o número da estação selecionada pelo cliente
             // 2. SetStation: uint8_t commandType = 1; uint16_t stationNumber;
+            protocoloSetStation = new Mensagem();
             protocoloSetStation = (Mensagem) input.readObject();
 
             if (protocoloSetStation.getCommandType() == '1') {

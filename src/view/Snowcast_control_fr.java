@@ -18,6 +18,7 @@ import util.Mensagem;
  */
 public class Snowcast_control_fr extends javax.swing.JFrame {
 
+    Snowcast_control clienteTCP;
     Map<Integer, String> estacoes = new HashMap<>();
     private DefaultTableModel modelo;
 
@@ -37,44 +38,49 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
         });
     }
 
-//    public void enviaEstacao(String estacao) {
-//        if (txtEstacao.getText().isEmpty()) {
-//            JOptionPane.showMessageDialog(null, "Command Invalid - Selecione uma estação.");
-//        } else if (Integer.parseInt(txtEstacao.getText()) > jTableEstacoes.getRowCount()) {
-//            JOptionPane.showMessageDialog(null, "Invalido");
-//        } else {
-////            for (int i = 0; i < modelo.getRowCount(); i++) {
-////                if (modelo.getValueAt(i, 0).toString().contains(estacao)) {
-////                    JOptionPane.showMessageDialog(null, jTableEstacoes.getValueAt(i, 0).toString() + " selecionada.");
-////                }
-////            }
-//
-//            switch (Integer.parseInt(txtEstacao.getText())) {
-//                case 0:
-////                    protocoloSetStation.setStationNumber(0);
-////                    System.out.println("jTableEstacoes.getSelectedRow() " + protocoloSetStation.getStationNumber());
-//                    clienteTCP.getStationNumber(0);
-//                    break;
-//                case 1:
-////                    protocoloSetStation.setStationNumber(1);
-////                    System.out.println("jTableEstacoes.getSelectedRow() " + protocoloSetStation.getStationNumber());
-//                    clienteTCP.getStationNumber(1);
-//                    break;
-//                case 2:
-////                    protocoloSetStation.setStationNumber(2);
-////                    System.out.println("jTableEstacoes.getSelectedRow() " + protocoloSetStation.getStationNumber());
-//                    clienteTCP.getStationNumber(2);
-//                    break;
-//                case 3:
-////                    protocoloSetStation.setStationNumber(3);
-////                    System.out.println("jTableEstacoes.getSelectedRow() " + protocoloSetStation.getStationNumber());
-//                    clienteTCP.getStationNumber(3);
-//                    break;
-//                default:
-//                    System.out.println("Comando inválido.");
+    public void enviaEstacao(String estacao) {
+        if (txtEstacao.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Command Invalid - Selecione uma estação.");
+            txtEstacao.requestFocus();
+            txtEstacao.setText("");
+        } else if (Integer.parseInt(txtEstacao.getText()) > jTableEstacoes.getRowCount()) {
+            JOptionPane.showMessageDialog(null, "Fora da faixa de estações! ");
+            txtEstacao.requestFocus();
+            txtEstacao.setText("");
+        } else {
+//            for (int i = 0; i < modelo.getRowCount(); i++) {
+//                if (modelo.getValueAt(i, 0).toString().contains(estacao)) {
+//                    JOptionPane.showMessageDialog(null, jTableEstacoes.getValueAt(i, 0).toString() + " selecionada.");
+//                }
 //            }
-//        }
-//    }
+
+            switch (Integer.parseInt(txtEstacao.getText())) {
+                case 0:
+//                    protocoloSetStation.setStationNumber(0);
+//                    System.out.println("jTableEstacoes.getSelectedRow() " + protocoloSetStation.getStationNumber());
+                    clienteTCP.getStationNumber(0);
+                    break;
+                case 1:
+//                    protocoloSetStation.setStationNumber(1);
+//                    System.out.println("jTableEstacoes.getSelectedRow() " + protocoloSetStation.getStationNumber());
+                    clienteTCP.getStationNumber(1);
+                    break;
+                case 2:
+//                    protocoloSetStation.setStationNumber(2);
+//                    System.out.println("jTableEstacoes.getSelectedRow() " + protocoloSetStation.getStationNumber());
+                    clienteTCP.getStationNumber(2);
+                    break;
+                case 3:
+//                    protocoloSetStation.setStationNumber(3);
+//                    System.out.println("jTableEstacoes.getSelectedRow() " + protocoloSetStation.getStationNumber());
+                    clienteTCP.getStationNumber(3);
+                    break;
+                default:
+                    System.out.println("Comando inválido.");
+            }
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -170,16 +176,9 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
                 "Estação", "Música"
             }
         ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class
-            };
             boolean[] canEdit = new boolean [] {
                 false, false
             };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
@@ -200,9 +199,9 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
         jScrollPane2.setViewportView(jTableEstacoes);
         if (jTableEstacoes.getColumnModel().getColumnCount() > 0) {
             jTableEstacoes.getColumnModel().getColumn(0).setResizable(false);
-            jTableEstacoes.getColumnModel().getColumn(0).setPreferredWidth(50);
+            jTableEstacoes.getColumnModel().getColumn(0).setPreferredWidth(10);
             jTableEstacoes.getColumnModel().getColumn(1).setResizable(false);
-            jTableEstacoes.getColumnModel().getColumn(1).setPreferredWidth(50);
+            jTableEstacoes.getColumnModel().getColumn(1).setPreferredWidth(150);
         }
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -264,8 +263,7 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_listarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_listarActionPerformed
-        //    Mensagem protocoloSetStation = new Mensagem();
-        Snowcast_control clienteTCP = new Snowcast_control();
+        clienteTCP = new Snowcast_control();
         try {
             clienteTCP.conexaoTCP(this);
         } catch (ClassNotFoundException ex) {
@@ -286,7 +284,7 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_cancelarActionPerformed
 
     private void btn_enviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_enviarActionPerformed
-        //enviaEstacao(txtEstacao.getText());
+        enviaEstacao(txtEstacao.getText());
     }//GEN-LAST:event_btn_enviarActionPerformed
 
     private void txtEstacaoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEstacaoKeyReleased
