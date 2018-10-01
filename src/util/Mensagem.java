@@ -27,13 +27,13 @@ public class Mensagem implements Serializable {
     private char replayType;
     private int numStation;
 
-    Map<String, String> estacoes = new HashMap<>();
+    Map<Integer, String> estacoes = new HashMap<>();
 
-    public Map<String, String> getEstacoes() {
+    public Map<Integer, String> getEstacoes() {
         return estacoes;
     }
 
-    public void setEstacoes(Map<String, String> estacoes) {
+    public void setEstacoes(Map<Integer, String> estacoes) {
         this.estacoes = estacoes;
     }
 

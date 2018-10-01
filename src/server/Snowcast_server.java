@@ -20,6 +20,10 @@
 package server;
 
 import clientes.Snowcast_listener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -33,6 +37,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JOptionPane;
 import util.Mensagem;
+import util.Musica;
 import view.Snowcast_server_fr;
 
 /**
@@ -47,6 +52,7 @@ public class Snowcast_server {
     private int portUDP;
     private final int numEstacoes = 4;
     private int stationNumber;
+    int portUDPCliente;
 
     Mensagem protocoloHello;
     Mensagem protocoloWelcome;
@@ -54,9 +60,10 @@ public class Snowcast_server {
     Mensagem protocoloSetStation;
     Mensagem InvalidCommand;
 
-    Snowcast_server server;
+    //Snowcast_server server;
     Snowcast_server_fr view;
     Snowcast_listener clienteUDP;
+    Musica musica;
 
     //Cria uma conexão ServerSocket
     private void criaServerSocket(int portaServer) throws IOException {
@@ -98,7 +105,8 @@ public class Snowcast_server {
             //Verificando o comando HELLO
             if (protocoloHello.getCommandType() == '0') {
                 // 1. Hello: uint8_t commandType= 0;  uint16_t udpPort;
-                int portUDPCliente = protocoloHello.getUpdPort();
+                portUDPCliente = protocoloHello.getUpdPort();
+                System.out.println("Cliente recebido , porta UDP : " + portUDPCliente);
 
                 //Cria o protocolo Welcome para se comunicar com o cliente
                 // 1. Welcome: uint8_t replyType = 0; uint16_t numStations;
@@ -107,41 +115,45 @@ public class Snowcast_server {
                 protocoloWelcome.setNumStation(numEstacoes);
                 //Enviando o protocolo Welcome ao cliente
                 output.writeObject(protocoloWelcome);
-
+                output.flush();
+                
                 //Cria o protocolo Announce para enviar as estações
                 // 2. Announce: uint8_t replyType = 1; uint8_t songnameSize;    char songname[songnameSize];
-                protocoloAnnounce = new Mensagem();
                 protocoloAnnounce.setReplayType('1');
                 //Criando uma interface Map com chave e valor, listando as estações
-                Map<String, String> estacoes = new HashMap<>();
-                estacoes.put("0 - FM Araibu", "The Zephyr Song");
-                estacoes.put("1 - Rádio Progresso", "Breaking The Girl");
-                estacoes.put("2 - RussasNet", "Otherside");
-                estacoes.put("3 - SomZoomSat", "Californication");
+                Map<Integer, String> estacoesMAP = new HashMap<>();
+                estacoesMAP.put(0, "The Zephyr Song");
+                estacoesMAP.put(1, "Breaking The Girl");
+                estacoesMAP.put(2, "Otherside");
+                estacoesMAP.put(3, "Californication");
 
-                protocoloAnnounce.setEstacoes(estacoes);
+                protocoloAnnounce.setEstacoes(estacoesMAP);
 
                 //Enviando o protocolo Welcome ao cliente
                 output.writeObject(protocoloAnnounce);
                 output.flush();
 
-                //Recebendo o número da estação selecionada pelo cliente
-                // 2. SetStation: uint8_t commandType = 1; uint16_t stationNumber;
-                protocoloSetStation = (Mensagem) input.readObject();
-
-                if (protocoloSetStation.getCommandType() == '1') {
-                    System.out.println("Estação selecionada pelo cliente : " + protocoloSetStation.getNumStation());
-
-                    //Enviando arquivo da canção para cliente UDP
-                    //Se conectar com o cliente UDP com a estação escolhida
-                    udpServer(portUDPCliente, protocoloSetStation.getNumStation());
-                } else {
-                    JOptionPane.showMessageDialog(null, "Erro no protocolo SetStation ");
-                }
-
             } else {
                 JOptionPane.showMessageDialog(null, "Erro : Cliente não conseguiu se conectar.");
                 fechaConexao(socket);
+            }
+
+            //Recebendo o número da estação selecionada pelo cliente
+            // 2. SetStation: uint8_t commandType = 1; uint16_t stationNumber;
+            protocoloSetStation = (Mensagem) input.readObject();
+
+            if (protocoloSetStation.getCommandType() == '1') {
+                if (protocoloSetStation.getNumStation() != 0) {
+                    System.out.println("Estação selecionada pelo cliente : " + protocoloSetStation.getNumStation());
+                } else {
+                    System.out.println("Paciência você deve ter meu jovem Padawan.");
+                }
+
+                //Enviando arquivo da canção para cliente UDP
+                //Se conectar com o cliente UDP com a estação escolhida
+                //udpServer(portUDPCliente, protocoloSetStation.getNumStation());
+            } else {
+                JOptionPane.showMessageDialog(null, "Erro no protocolo SetStation ");
             }
 
             input.close();
@@ -150,19 +162,16 @@ public class Snowcast_server {
         } catch (IOException | ClassNotFoundException ex) {
             //Tratando as falhas
             JOptionPane.showMessageDialog(null, ex.getMessage());
-        } finally {
-            //Fechando conexão
-//            fechaConexao(socket);
         }
     }
 
     public void startServer() {
         try {
             //Instacia um objeto tipo Snowcast_server
-            server = new Snowcast_server();
+            Snowcast_server server = new Snowcast_server();
             System.out.println("Aguardando conexão...");
 
-            //Cria uma conexão
+            //Criando um socket de conexão
             server.criaServerSocket(portTCPServer);
 
             while (true) {
@@ -181,83 +190,49 @@ public class Snowcast_server {
         }
     }
 
-    private void udpServer(int portaUdpCliente, int stationNumber) throws SocketException, IOException {
-        this.portUDP = portaUdpCliente;
-        this.stationNumber = stationNumber;
-        int numConn = 1;
-
-        DatagramSocket serverSocket = new DatagramSocket(portUDPServer);
-        clienteUDP.starClienteUdp();
-
-        byte[] dadosRecebidos = new byte[1024];
-        byte[] dadosEnviados = new byte[1024];
-
-        while (true) {
-
-            DatagramPacket pacoteRecebido = new DatagramPacket(dadosRecebidos, dadosRecebidos.length);
-            System.out.println("Esperando por datagrama UDP na porta " + portUDPServer);
-            serverSocket.receive(pacoteRecebido);
-            System.out.print("Datagrama UDP [" + numConn + "] recebido...");
-
-            String sentence = new String(pacoteRecebido.getData());
-            System.out.println(sentence);
-
-            InetAddress IPAddress = pacoteRecebido.getAddress();
-
-            int port = pacoteRecebido.getPort();
-
-            String capitalizedSentence = sentence.toUpperCase();
-
-            dadosEnviados = capitalizedSentence.getBytes();
-
-            DatagramPacket sendPacket = new DatagramPacket(dadosEnviados,
-                    dadosEnviados.length, IPAddress, port);
-
-            System.out.print("Enviando " + capitalizedSentence + "...");
-
-            serverSocket.send(sendPacket);
-            System.out.println("OK\n");
-        }
-
+//    private void udpServer(int portaUdpCliente, int stationNumber) throws SocketException, IOException, ClassNotFoundException {
+//
+//        //Porta UDP do cliente
+//        this.portUDP = portaUdpCliente;
+//        //Número da estação recebida pelo cliente
+//        this.stationNumber = stationNumber;
+//        int numConn = 1;
+//
+//        //Criando um servidor de Datagram
+//        DatagramSocket serverSocket = new DatagramSocket(portUDPServer);
+//        System.out.println("Servidor UDP criado na porta " + portUDPServer);
+//        //Instanciando um cliente UDP
+//        clienteUDP = new Snowcast_listener();
+//        clienteUDP.start();
+//
+//        musica = new Musica(1, "The Zephyr Song");
+//
+//        /* Escrita do Objeto*/
+//        FileOutputStream escrever = new FileOutputStream("C:/");
+//        ObjectOutputStream oos = new ObjectOutputStream(escrever);
+//        oos.writeObject(oos);
+//        oos.close();
+//
+//        /* Escrita do Objeto*/
+//        FileInputStream ler = new FileInputStream("C:/");
+//        ObjectInputStream ois = new ObjectInputStream(ler);
+//        Musica musica1 = (Musica) ois.readObject();
+//        ois.close();
+//
+//        while (true) {
+//
+//            //byte[] dadosRecebidos = new byte[1024];
+//            byte[] dadosEnviados = new byte[1024];
+//
+//            DatagramPacket sendPacket = new DatagramPacket(dadosEnviados, dadosEnviados.length);
+//
+//            serverSocket.send(sendPacket);
+//
+//            System.out.println("OK\n");
+//        }
+//    }
+    public static void main(String[] args) {
+        new Snowcast_server().startServer();
     }
 
-//    public void stopServer() throws IOException {
-//        
-//        //Instacia um objeto tipo Snowcast_server
-//        this.server = new Snowcast_server();
-//
-//        //Espera a solicitação de uma conexão do cliente
-//        Socket socket = server.esperaConexão();
-//
-//        this.server.fechaConexao(socket);
-//    }
-//    public static void main(String[] agrs) throws IOException {
-//        try {
-//            //Instacia um objeto tipo Snowcast_server
-//            Snowcast_server server;
-//            server = new Snowcast_server();
-//            System.out.println("Aguardando conexão...");
-//
-//            //Cria uma conexão
-//            server.criaServerSocket(portServer);
-//
-//            while (true) {
-//                //Espera a solicitação de uma conexão do cliente
-//                Socket socket = server.esperaConexão();
-//
-//                //Tratando conexão
-//                server.trataConexao(socket);
-//
-//                //Fechando conexão
-//                server.fechaConexao(socket);
-//
-//                System.out.println("Aguardando clientes...");
-//            }
-//
-//        } catch (Exception ex) {
-//            //Tratando erros na comunicação Socket
-//            System.out.println("Erro de comunicação do Socket: " + ex.getMessage());
-//        }
-//
-//    }
 }

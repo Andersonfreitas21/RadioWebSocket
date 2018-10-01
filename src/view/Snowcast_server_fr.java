@@ -14,7 +14,6 @@ public class Snowcast_server_fr extends javax.swing.JFrame {
         initComponents();
     }
 
-  
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -117,11 +116,6 @@ public class Snowcast_server_fr extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_stopActionPerformed
-//        try {
-//            servidor.stopServer();
-//        } catch (IOException ex) {
-//            Logger.getLogger(Snowcast_server_fr.class.getName()).log(Level.SEVERE, null, ex);
-//        }
         System.exit(0);
     }//GEN-LAST:event_btn_stopActionPerformed
 

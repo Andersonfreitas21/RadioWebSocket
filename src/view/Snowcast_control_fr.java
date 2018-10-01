@@ -18,95 +18,63 @@ import util.Mensagem;
  */
 public class Snowcast_control_fr extends javax.swing.JFrame {
 
-    Map<String, String> estacoes = new HashMap<>();
+    Map<Integer, String> estacoes = new HashMap<>();
     private DefaultTableModel modelo;
-    Mensagem protocoloSetStation = new Mensagem();
-    Snowcast_control clienteTCP = new Snowcast_control();
 
     public Snowcast_control_fr() {
         initComponents();
     }
 
-//    public void enviaSetSTation() throws IOException {
-//        Socket socketClienteTCP;
-//        socketClienteTCP = new Socket("127.0.0.1",55555);
-//        ObjectOutputStream output;
-//        output = new ObjectOutputStream(socketClienteTCP.getOutputStream());
-//        //tocar música
-//        //escolhe o id ou nome da estação que o cliente selecionou  
-//        //envia via protocolo SetStation o número da estação
-//        //2. SetStation: uint8_t commandType = 1; uint16_t stationNumber;
-//        protocoloSetStation.setCommandType('1');
-//        protocoloSetStation.setStationNumber(jTableEstacoes.getSelectedRow());
-//        //System.out.println("Número da estação : " + protocoloSetStation.getStationNumber());
-//        output.writeObject(protocoloSetStation);
-//    }
     //Método para exibir na grade 
     public void RetornoDados(Object obj) {
-        this.estacoes = (Map<String, String>) obj;
+        this.estacoes = (Map<Integer, String>) obj;
         modelo = (DefaultTableModel) jTableEstacoes.getModel();
         modelo.setNumRows(0);
-
         estacoes.keySet().forEach((key) -> {
             //Capturamos o valor a partir da chave
             String value = estacoes.get(key);
-            modelo.addRow(new String[]{key, value});
+            modelo.addRow(new Object[]{key, value});
         });
     }
 
-//    public void setCampo() {
-//        if ((jTableEstacoes.getSelectedRow() != -1) || (jTableEstacoes.getSelectedColumn() == 0)) {
-//            if (jTableEstacoes.getSelectedColumn() == 0) {
-//                txtEstacao.setText(jTableEstacoes.getValueAt(jTableEstacoes.getSelectedRow(), 0).toString());
-//            } else {
-//                txtEstacao.setText(jTableEstacoes.getValueAt(jTableEstacoes.getSelectedRow(), 1).toString());
+//    public void enviaEstacao(String estacao) {
+//        if (txtEstacao.getText().isEmpty()) {
+//            JOptionPane.showMessageDialog(null, "Command Invalid - Selecione uma estação.");
+//        } else if (Integer.parseInt(txtEstacao.getText()) > jTableEstacoes.getRowCount()) {
+//            JOptionPane.showMessageDialog(null, "Invalido");
+//        } else {
+////            for (int i = 0; i < modelo.getRowCount(); i++) {
+////                if (modelo.getValueAt(i, 0).toString().contains(estacao)) {
+////                    JOptionPane.showMessageDialog(null, jTableEstacoes.getValueAt(i, 0).toString() + " selecionada.");
+////                }
+////            }
+//
+//            switch (Integer.parseInt(txtEstacao.getText())) {
+//                case 0:
+////                    protocoloSetStation.setStationNumber(0);
+////                    System.out.println("jTableEstacoes.getSelectedRow() " + protocoloSetStation.getStationNumber());
+//                    clienteTCP.getStationNumber(0);
+//                    break;
+//                case 1:
+////                    protocoloSetStation.setStationNumber(1);
+////                    System.out.println("jTableEstacoes.getSelectedRow() " + protocoloSetStation.getStationNumber());
+//                    clienteTCP.getStationNumber(1);
+//                    break;
+//                case 2:
+////                    protocoloSetStation.setStationNumber(2);
+////                    System.out.println("jTableEstacoes.getSelectedRow() " + protocoloSetStation.getStationNumber());
+//                    clienteTCP.getStationNumber(2);
+//                    break;
+//                case 3:
+////                    protocoloSetStation.setStationNumber(3);
+////                    System.out.println("jTableEstacoes.getSelectedRow() " + protocoloSetStation.getStationNumber());
+//                    clienteTCP.getStationNumber(3);
+//                    break;
+//                default:
+//                    System.out.println("Comando inválido.");
 //            }
 //        }
 //    }
-    public void enviaEstacao(String estacao) {
-        if (txtEstacao.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Command Invalid - Selecione uma estação.");
-        } else if (Integer.parseInt(txtEstacao.getText()) > jTableEstacoes.getRowCount()) {
-            JOptionPane.showMessageDialog(null, "Invalido");
-        } else {
-//            for (int i = 0; i < modelo.getRowCount(); i++) {
-//                if (modelo.getValueAt(i, 0).toString().contains(estacao)) {
-//                    JOptionPane.showMessageDialog(null, jTableEstacoes.getValueAt(i, 0).toString() + " selecionada.");
-//                }
-//            }
-            switch (Integer.parseInt(txtEstacao.getText())) {
-                case 0:
-                    protocoloSetStation.setStationNumber(0);
-                    System.out.println("jTableEstacoes.getSelectedRow() " + protocoloSetStation.getStationNumber());
-                    clienteTCP.getStationNumber(protocoloSetStation.getStationNumber());
-                    break;
-                case 1:
-                    protocoloSetStation.setStationNumber(1);
-                    System.out.println("jTableEstacoes.getSelectedRow() " + protocoloSetStation.getStationNumber());
-                    clienteTCP.getStationNumber(protocoloSetStation.getStationNumber());
-                    break;
-                case 2:
-                    protocoloSetStation.setStationNumber(2);
-                    System.out.println("jTableEstacoes.getSelectedRow() " + protocoloSetStation.getStationNumber());
-                    clienteTCP.getStationNumber(protocoloSetStation.getStationNumber());
-                    break;
-                case 3:
-                    protocoloSetStation.setStationNumber(3);
-                    System.out.println("jTableEstacoes.getSelectedRow() " + protocoloSetStation.getStationNumber());
-                    clienteTCP.getStationNumber(protocoloSetStation.getStationNumber());
-                    break;
-                default:
-                    System.out.println("Comando inválido.");
-            }
-//            if (txtEstacao.getText().equals("0")) {
-//                JOptionPane.showMessageDialog(null, "DEU CERTO");
-//            }
-        }
-//        if (txtEstacao.getText().equals("0")) {
-//            JOptionPane.showMessageDialog(null, "DEU CERTO");
-//        }
-    }
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -296,6 +264,8 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_listarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_listarActionPerformed
+        //    Mensagem protocoloSetStation = new Mensagem();
+        Snowcast_control clienteTCP = new Snowcast_control();
         try {
             clienteTCP.conexaoTCP(this);
         } catch (ClassNotFoundException ex) {
@@ -316,7 +286,7 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_cancelarActionPerformed
 
     private void btn_enviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_enviarActionPerformed
-        enviaEstacao(txtEstacao.getText());
+        //enviaEstacao(txtEstacao.getText());
     }//GEN-LAST:event_btn_enviarActionPerformed
 
     private void txtEstacaoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEstacaoKeyReleased
@@ -363,4 +333,5 @@ public class Snowcast_control_fr extends javax.swing.JFrame {
     private javax.swing.JTable jTableEstacoes;
     private javax.swing.JTextField txtEstacao;
     // End of variables declaration//GEN-END:variables
+
 }

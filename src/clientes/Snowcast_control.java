@@ -21,20 +21,21 @@ public class Snowcast_control {
     Mensagem protocoloAnnounce;
     Mensagem protocoloSetStation;
     Mensagem InvalidCommand;
-    
+
+    Snowcast_control clienteTCP;
     Snowcast_control_fr view;
-    int stationNumber;
+    Socket socketClienteTCP;
+    //int stationNumber;
 
-    //Função para enviar a estação selecionada pelo cliente
-    public void getStationNumber(int stationNumber) {
-        this.stationNumber = stationNumber;
-        try {
-            conexaoTCP(view);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Snowcast_control.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
+//    //Função para enviar a estação selecionada pelo cliente
+//    public void getStationNumber(int stationNumber) {
+//        this.stationNumber = stationNumber;
+////        try {
+////            conexaoTCP(view);
+////        } catch (ClassNotFoundException ex) {
+////            Logger.getLogger(Snowcast_control.class.getName()).log(Level.SEVERE, null, ex);
+////        }
+//    }
     //Método que inicia um socket e se comunica com o servidor
     public void conexaoTCP(Snowcast_control_fr view) throws ClassNotFoundException {
         try {
@@ -46,7 +47,7 @@ public class Snowcast_control {
             int portUDPCliente = 66666;
 
             //Cria um socket para estabelecer conexão com o servidor
-            Socket socketClienteTCP = new Socket(server, portServer);
+            socketClienteTCP = new Socket(server, portServer);
 
             //Criação dos streams de entrada e saída
             ObjectOutputStream output = new ObjectOutputStream(socketClienteTCP.getOutputStream());
@@ -59,7 +60,6 @@ public class Snowcast_control {
             // 1. Welcome:        uint8_t replyType = 0; uint16_t numStations;
             // 2. Announce:       uint8_t replyType = 1; uint8_t songnameSize;    char songname[songnameSize];
             // 3. InvalidCommand: uint8_t replyType = 2; uint8_t replyStringSize; char replyString[replyStringSize];
-            
             //Instanciando o protocolo HELLO
             // 1. Hello: uint8_t commandType= 0;  uint16_t udpPort;
             //O comando Hello é enviado quando o cliente conecta-se ao servidor. Ele diz ao servidor para qual porta UDP devem ser enviados os dados da canção.
@@ -95,10 +95,9 @@ public class Snowcast_control {
                 view.RetornoDados(protocoloAnnounce.getEstacoes());
 
                 // 2. SetStation: uint8_t commandType = 1; uint16_t stationNumber;
-                protocoloSetStation = new Mensagem();
                 protocoloSetStation.setCommandType('1');
-                protocoloSetStation.setNumStation(stationNumber);
-                
+                protocoloSetStation.setNumStation(0);
+
                 output.writeObject(protocoloSetStation);
                 output.flush();
 
@@ -112,7 +111,7 @@ public class Snowcast_control {
             output.close();
 
         } catch (IOException ex) {
-            System.out.println("Erro :" + ex.getMessage());
+            System.out.println("Erro conexão TCP:" + ex.getMessage());
         }
     }
 }
